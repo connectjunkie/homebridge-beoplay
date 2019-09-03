@@ -1,0 +1,24 @@
+{
+  "name": "homebridge-beoplay",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "description": "Homebridge plugin to control a Bang and Olufsen (Beoplay) speaker",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "author": {
+    "name": "connectjunkie"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/connectjunkie/homebridge-beoplay.git"
+  },
+  "dependencies": {
+    "request": "^2.65.0",
+    "util": "^0.12.1"
+  }
+}
