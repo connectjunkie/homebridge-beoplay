@@ -34,4 +34,4 @@ The "type" parameter is optional, and defaults to "speaker". See the notes below
 
 The speaker support in HomeKit is limited - only the Mute functionality is supported and the default iOS Home app does not support speakers at all. Third party HomeKit apps do support speakers and do work for setting volume as well (for example - the [Elgato Eve app](https://apps.apple.com/gb/app/eve-for-homekit/id917695792)) however you will not be able to control the speaker with Siri.
 
-For this reason this plugin also supports exposing the speaker as a Switch (instead of as a Speaker) by setting "type" to "switch" in your config.json. This will allow the Speaker to be muted/unmuted using Siri, although it is currently a bit unintuitive as you are turning on and off mute, so will be opposite to what most people are expectig.  
+For this reason this plugin also supports exposing the speaker as a Switch by setting "type" to "switch" in your config.json. This will allow the Speaker to be muted/unmuted using Siri, although it is currently unintuitive as you are turning on and off mute, so will be opposite behaviour to what most people are expecting.  
