@@ -1,8 +1,8 @@
-# Beoplay/Bang & Olufsen accessory
+# Bang & Olufsen/Beoplay accessory
 
-This accessory allows you to control Bang & Olufsen (Beoplay) speakers using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Bang & Olufsen A9v1 speaker, so reports of success or issues with other B&O speakers is welcome.
+This accessory allows you to control Bang & Olufsen (Beoplay) speakers using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Bang & Olufsen A9v1 speaker, so reports of success or issues with other B&O speakers are welcome.
 
-At this point only the ability to set the volume and mute the speaker is supported (see notes below).
+At this point only the ability to set the volume and mute the speaker is supported (see notes below). Note that the plugin honours the B&O speaker's "maximum volume" setting, so trying to set the volume to higher than this will set the volume to the maximum, which may not be reflected in your HomeKit app until you refresh.
 
 # Installation
 
@@ -32,6 +32,13 @@ The "type" parameter is optional, and defaults to "speaker". See the notes below
 
 # Notes
 
-The speaker support in HomeKit is limited - only the Mute functionality is supported and the default iOS Home app does not support speakers at all. Third party HomeKit apps do support speakers and do work for setting volume as well (for example - the [Elgato Eve app](https://apps.apple.com/gb/app/eve-for-homekit/id917695792)) however you will not be able to control the speaker with Siri.
+The speaker support in HomeKit is limited - only the Mute functionality is supported on a Speaker by default and the  iOS Home app (as of iOS 12) does not support speakers at all. Third party HomeKit apps may support speakers and may work for setting volume as well (for example - the [Elgato Eve app](https://apps.apple.com/gb/app/eve-for-homekit/id917695792) works) however you will not be able to control the speaker with Siri.
 
-For this reason this plugin also supports exposing the speaker as a Switch by setting "type" to "switch" in your config.json. This will allow the Speaker to be muted/unmuted using Siri, although it is currently unintuitive as you are turning on and off mute, so will be opposite behaviour to what most people are expecting.  
+For this reason this plugin also supports exposing the speaker as a Lightbulb (as per [this fork of the Sonos plugin](https://github.com/dominicstelljes/homebridge-sonos)) by setting "type" to "bulb" in your config.json. This will allow the Speaker to be muted/unmuted using Siri and the Home app, and allow the volume to be set as well. 
+
+This will have some side effects though - Siri will mute the speaker if you say "Turn off the lights" and will change the volume if you say "Dim the lights to 20%". 
+
+# Credits
+This plugin started life as a fork of the [homebridge-http-speaker](https://github.com/Supereg/homebridge-http-speaker) plugin by Supereg
+
+Code for the Lightbulb implementation is derived from a [fork of homebridge-sonos](https://github.com/dominicstelljes/homebridge-sonos) by Dominic Stelljes.

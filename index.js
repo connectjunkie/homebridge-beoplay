@@ -1,12 +1,17 @@
 "use strict";
 
-var Service, Characteristic;
+var Service, Characteristic, VolumeCharacteristic;
 const request = require("request");
 const util = require("util");
+var inherits = require('util').inherits;
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
+
+    // we can only do this after we receive the homebridge API object
+    //makeVolumeCharacteristic();
+
     homebridge.registerAccessory("homebridge-beoplay", "Beoplay", BeoplayAccessory);
 };
 
@@ -17,7 +22,7 @@ function BeoplayAccessory(log, config) {
     this.ip = config.ip;
     this.type = config.type || 'speaker';
 
-    this.maxVolume = 10;
+    this.maxVolume = 90;
     this.volume = {};
     this.mute = {};
 
@@ -54,8 +59,8 @@ BeoplayAccessory.prototype = {
                 .on("get", this.getVolume.bind(this))
                 .on("set", this.setVolume.bind(this));
         } else {
-            this.log("Creating switch!");
-            beoplayService = new Service.Switch(this.name);
+            this.log("Creating bulb!");
+            beoplayService = new Service.Lightbulb(this.name);
 
             this.log("... configuring on/off characteristic");
             beoplayService
@@ -63,9 +68,9 @@ BeoplayAccessory.prototype = {
                 .on("get", this.getMuteState.bind(this))
                 .on("set", this.setMuteState.bind(this));
 
-            this.log("... adding volume characteristic");
+            this.log("... adding volume (brightness) characteristic");
             beoplayService
-                .addCharacteristic(new Characteristic.Volume())
+                .addCharacteristic(new Characteristic.Brightness())
                 .on("get", this.getVolume.bind(this))
                 .on("set", this.setVolume.bind(this));
         }
@@ -93,7 +98,15 @@ BeoplayAccessory.prototype = {
                 var obj = JSON.parse(body);
                 const muted = obj.volume.speaker.muted;
                 this.log("Speaker is currently %s", muted ? "MUTED" : "NOT MUTED");
-                callback(null, muted);
+
+                if (this.type=='speaker') {
+                    // return the mute state correctly
+                    callback(null, muted);
+                } else {
+                    // return the inverse
+                    callback(null, !muted);
+                }
+                
             }
         }.bind(this));
     },
@@ -102,7 +115,12 @@ BeoplayAccessory.prototype = {
         var muteBody = {
             muted: muted
         };
-        
+
+        if (this.type!=='speaker') {
+            // if not the speaker, we need to invert the state we are setting
+            muteBody.muted = !muted;
+        }
+
         this._httpRequest(this.mute.setUrl, JSON.stringify(muteBody), "PUT", function (error, response, body) {
             if (error) {
                 this.log("setMuteState() failed: %s", error.message);
@@ -177,3 +195,25 @@ BeoplayAccessory.prototype = {
     }
 
 };
+
+//
+// Custom Characteristic for Volume
+//
+
+function makeVolumeCharacteristic() {
+
+    VolumeCharacteristic = function () {
+        Characteristic.call(this, 'Volume', '91288267-5678-49B2-8D22-F57BE995AA93');
+        this.setProps({
+            format: Characteristic.Formats.INT,
+            unit: Characteristic.Units.PERCENTAGE,
+            maxValue: 100,
+            minValue: 0,
+            minStep: 1,
+            perms: [Characteristic.Perms.READ, Characteristic.Perms.WRITE, Characteristic.Perms.NOTIFY]
+        });
+        this.value = this.getDefaultValue();
+    };
+
+    inherits(VolumeCharacteristic, Characteristic);
+}

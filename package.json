@@ -16,7 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com/connectjunkie/homebridge-beoplay.git"
+    "url": "git+https://github.com/connectjunkie/homebridge-beoplay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/connectjunkie/homebridge-beoplay/issues"
   },
   "dependencies": {
     "request": "^2.65.0",
