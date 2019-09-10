@@ -17,17 +17,22 @@ function BeoplayAccessory(log, config) {
     this.name = config.name;
     this.ip = config.ip;
     this.type = config.type || 'speaker';
+    this.mode = config.mode || 'mute';
 
     // Default to the Max volume of a Beoplay speaker in case this is not obtained before the volume is set the first time
     this.maxVolume = 90;
     this.volume = {};
     this.mute = {};
+    this.power = {};
 
     this.volume.statusUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume', this.ip);
     this.volume.setUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume/Speaker/DefaultLevel', this.ip);
 
     this.mute.statusUrl = this.volume.statusUrl;
     this.mute.setUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume/Speaker/Muted', this.ip);
+
+    this.power.statusUrl = util.format('http://%s:8080/BeoDevice/powerManagement/', this.ip);
+    this.power.setUrl = util.format('http://%s:8080/BeoDevice/powerManagement/standby', this.ip);
 }
 
 BeoplayAccessory.prototype = {
@@ -44,11 +49,19 @@ BeoplayAccessory.prototype = {
             this.log("Creating speaker!");
             beoplayService = new Service.Speaker(this.name);
 
-            this.log("... configuring mute characteristic");
-            beoplayService
-                .getCharacteristic(Characteristic.Mute)
-                .on("get", this.getMuteState.bind(this))
-                .on("set", this.setMuteState.bind(this));
+            if (this.mode == 'mute') { // we will mute the speaker when muted
+                this.log("... configuring mute characteristic");
+                beoplayService
+                    .getCharacteristic(Characteristic.Mute)
+                    .on("get", this.getMuteState.bind(this))
+                    .on("set", this.setMuteState.bind(this));
+            } else { // we will put speaker in standby when muted
+                this.log("... configuring power characteristic");
+                beoplayService
+                    .getCharacteristic(Characteristic.Mute)
+                    .on("get", this.getPowerState.bind(this))
+                    .on("set", this.setPowerState.bind(this));
+            }
 
             this.log("... adding volume characteristic");
             beoplayService
@@ -59,11 +72,19 @@ BeoplayAccessory.prototype = {
             this.log("Creating bulb!");
             beoplayService = new Service.Lightbulb(this.name);
 
-            this.log("... configuring on/off characteristic");
-            beoplayService
-                .getCharacteristic(Characteristic.On)
-                .on("get", this.getMuteState.bind(this))
-                .on("set", this.setMuteState.bind(this));
+            if (this.mode == 'mute') { // we will mute the speaker when turned off
+                this.log("... configuring on/off characteristic");
+                beoplayService
+                    .getCharacteristic(Characteristic.On)
+                    .on("get", this.getMuteState.bind(this))
+                    .on("set", this.setMuteState.bind(this));
+            } else { // we will put speaker in standby when turned off
+                this.log("... configuring on/off characteristic");
+                beoplayService
+                    .getCharacteristic(Characteristic.On)
+                    .on("get", this.getPowerState.bind(this))
+                    .on("set", this.setPowerState.bind(this));
+            }
 
             this.log("... adding volume (brightness) characteristic");
             beoplayService
@@ -77,8 +98,8 @@ BeoplayAccessory.prototype = {
         informationService
             .setCharacteristic(Characteristic.Manufacturer, "connectjunkie")
             .setCharacteristic(Characteristic.Model, "Beoplay")
-            .setCharacteristic(Characteristic.SerialNumber, "A9v1")
-            .setCharacteristic(Characteristic.FirmwareRevision, "0.0.3");
+            .setCharacteristic(Characteristic.SerialNumber, "A9 Mk2")
+            .setCharacteristic(Characteristic.FirmwareRevision, "0.0.4");
 
         return [informationService, beoplayService];
     },
@@ -96,14 +117,14 @@ BeoplayAccessory.prototype = {
                 const muted = obj.volume.speaker.muted;
                 this.log("Speaker is currently %s", muted ? "MUTED" : "NOT MUTED");
 
-                if (this.type=='speaker') {
+                if (this.type == 'speaker') {
                     // return the mute state correctly
                     callback(null, muted);
                 } else {
                     // return the inverse
                     callback(null, !muted);
                 }
-                
+
             }
         }.bind(this));
     },
@@ -113,7 +134,7 @@ BeoplayAccessory.prototype = {
             muted: muted
         };
 
-        if (this.type!=='speaker') {
+        if (this.type !== 'speaker') {
             // if not a speaker, we need to invert the state we are setting
             muteBody.muted = !muted;
         }
@@ -133,6 +154,67 @@ BeoplayAccessory.prototype = {
         }.bind(this));
     },
 
+    getPowerState: function (callback) {
+        this._httpRequest(this.power.statusUrl, "", "GET", function (error, response, body) {
+            if (error) {
+                this.log("getPowerState() failed: %s", error.message);
+                callback(error);
+            } else if (response.statusCode !== 200) {
+                this.log("getPowerState() request returned http error: %s", response.statusCode);
+                callback(new Error("getMuteState() returned http error " + response.statusCode));
+            } else {
+                var obj = JSON.parse(body);
+                const power = obj.profile.powerManagement.standby.powerState;
+                this.log("Speaker is currently %s", power);
+
+                var state;
+                if (power == "on") {
+                    state = true;
+                } else {
+                    state = false;
+                }
+
+                if (this.type == 'speaker') {
+                    // return the power state reversed
+                    callback(null, !state);
+                } else {
+                    // return correctly
+                    callback(null, state);
+                }
+            }
+        }.bind(this));
+    },
+
+    setPowerState: function (power, callback) {
+        var powerBody = {
+            standby: {
+                powerState: power ? "on" : "standby"
+            }
+        };
+
+        if (this.type == 'speaker') {
+            // if a speaker, we need to invert the state we are setting
+            powerBody.standby.powerState = !power ? "on" : "standby";
+        }
+
+        this._httpRequest(this.power.setUrl, JSON.stringify(powerBody), "PUT", function (error, response, body) {
+            if (error) {
+                this.log("setPowerState() failed: %s", error.message);
+                callback(error);
+            } else if (response.statusCode !== 200) {
+                this.log("setPowerState() request returned http error: %s", response.statusCode);
+                callback(new Error("setPowerState() returned http error " + response.statusCode));
+            } else {
+                if (this.type == 'speaker') {
+                    this.log("setPowerState() successfully set power state to %s", !power ? "ON" : "STANDBY");
+                } else {
+                    this.log("setPowerState() successfully set power state to %s", power ? "ON" : "STANDBY");
+                }
+                callback(undefined, body);
+            }
+        }.bind(this));
+    },
+
     getVolume: function (callback) {
         this._httpRequest(this.volume.statusUrl, "", "GET", function (error, response, body) {
             if (error) {
@@ -143,7 +225,7 @@ BeoplayAccessory.prototype = {
                 callback(new Error("getVolume() returned http error " + response.statusCode));
             } else {
                 var obj = JSON.parse(body);
-                const volume = parseInt(obj.volume.speaker.level);
+                const volume = parseInt(obj.volume.speaker.defaultLevel);
                 this.log("Speaker's volume is at %s %", volume);
 
                 this.maxVolume = parseInt(obj.volume.speaker.range.maximum);
