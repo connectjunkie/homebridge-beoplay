@@ -105,7 +105,7 @@ BeoplayAccessory.prototype = {
     },
 
     getMuteState: function (callback) {
-        this._httpRequest(this.mute.statusUrl, "", "GET", function (error, response, body) {
+        this._httpRequest(this.mute.statusUrl, null, "GET", function (error, response, body) {
             if (error) {
                 this.log("getMuteState() failed: %s", error.message);
                 callback(error);
@@ -113,8 +113,7 @@ BeoplayAccessory.prototype = {
                 this.log("getMuteState() request returned http error: %s", response.statusCode);
                 callback(new Error("getMuteState() returned http error " + response.statusCode));
             } else {
-                var obj = JSON.parse(body);
-                const muted = obj.volume.speaker.muted;
+                const muted = body.volume.speaker.muted;
                 this.log("Speaker is currently %s", muted ? "MUTED" : "NOT MUTED");
 
                 if (this.type == 'speaker') {
@@ -139,7 +138,7 @@ BeoplayAccessory.prototype = {
             muteBody.muted = !muted;
         }
 
-        this._httpRequest(this.mute.setUrl, JSON.stringify(muteBody), "PUT", function (error, response, body) {
+        this._httpRequest(this.mute.setUrl, muteBody, "PUT", function (error, response, body) {
             if (error) {
                 this.log("setMuteState() failed: %s", error.message);
                 callback(error);
@@ -155,7 +154,7 @@ BeoplayAccessory.prototype = {
     },
 
     getPowerState: function (callback) {
-        this._httpRequest(this.power.statusUrl, "", "GET", function (error, response, body) {
+        this._httpRequest(this.power.statusUrl, null, "GET", function (error, response, body) {
             if (error) {
                 this.log("getPowerState() failed: %s", error.message);
                 callback(error);
@@ -163,8 +162,7 @@ BeoplayAccessory.prototype = {
                 this.log("getPowerState() request returned http error: %s", response.statusCode);
                 callback(new Error("getMuteState() returned http error " + response.statusCode));
             } else {
-                var obj = JSON.parse(body);
-                const power = obj.profile.powerManagement.standby.powerState;
+                const power = body.profile.powerManagement.standby.powerState;
                 this.log("Speaker is currently %s", power);
 
                 var state;
@@ -197,7 +195,7 @@ BeoplayAccessory.prototype = {
             powerBody.standby.powerState = !power ? "on" : "standby";
         }
 
-        this._httpRequest(this.power.setUrl, JSON.stringify(powerBody), "PUT", function (error, response, body) {
+        this._httpRequest(this.power.setUrl, powerBody, "PUT", function (error, response, body) {
             if (error) {
                 this.log("setPowerState() failed: %s", error.message);
                 callback(error);
@@ -216,7 +214,7 @@ BeoplayAccessory.prototype = {
     },
 
     getVolume: function (callback) {
-        this._httpRequest(this.volume.statusUrl, "", "GET", function (error, response, body) {
+        this._httpRequest(this.volume.statusUrl, null, "GET", function (error, response, body) {
             if (error) {
                 this.log("getVolume() failed: %s", error.message);
                 callback(error);
@@ -224,11 +222,10 @@ BeoplayAccessory.prototype = {
                 this.log("getVolume() request returned http error: %s", response.statusCode);
                 callback(new Error("getVolume() returned http error " + response.statusCode));
             } else {
-                var obj = JSON.parse(body);
-                const volume = parseInt(obj.volume.speaker.defaultLevel);
+                const volume = parseInt(body.volume.speaker.defaultLevel);
                 this.log("Speaker's volume is at %s %", volume);
 
-                this.maxVolume = parseInt(obj.volume.speaker.range.maximum);
+                this.maxVolume = parseInt(body.volume.speaker.range.maximum);
                 this.log("Speaker's maximum volume is set to %s %", this.maxVolume);
 
                 callback(null, volume);
@@ -245,7 +242,7 @@ BeoplayAccessory.prototype = {
             defaultLevel: volume
         };
 
-        this._httpRequest(this.volume.setUrl, JSON.stringify(volumeBody), "PUT", function (error, response, body) {
+        this._httpRequest(this.volume.setUrl, volumeBody, "PUT", function (error, response, body) {
             if (error) {
                 this.log("setVolume() failed: %s", error.message);
                 callback(error);
@@ -261,13 +258,18 @@ BeoplayAccessory.prototype = {
     },
 
     _httpRequest: function (url, body, method, callback) {
-        request({
-                url: url,
-                body: body,
-                method: method,
-                rejectUnauthorized: false
-            },
-            function (error, response, body) {
+        var options = {
+            url: url,
+            method: method,
+            json: true,
+            rejectUnauthorized: false
+        }
+
+        if (body !== null) {
+            options.body = body;
+        }
+
+        request(options, function (error, response, body) {
                 callback(error, response, body);
             }
         )
