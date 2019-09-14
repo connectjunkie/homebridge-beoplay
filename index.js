@@ -26,7 +26,7 @@ function BeoplayAccessory(log, config) {
     this.power = {};
 
     this.volume.statusUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume', this.ip);
-    this.volume.setUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume/Speaker/DefaultLevel', this.ip);
+    this.volume.setUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume/Speaker/Level', this.ip);
 
     this.mute.statusUrl = this.volume.statusUrl;
     this.mute.setUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume/Speaker/Muted', this.ip);
@@ -222,7 +222,7 @@ BeoplayAccessory.prototype = {
                 this.log("getVolume() request returned http error: %s", response.statusCode);
                 callback(new Error("getVolume() returned http error " + response.statusCode));
             } else {
-                const volume = parseInt(body.volume.speaker.defaultLevel);
+                const volume = parseInt(body.volume.speaker.level);
                 this.log("Speaker's volume is at %s %", volume);
 
                 this.maxVolume = parseInt(body.volume.speaker.range.maximum);
@@ -239,7 +239,7 @@ BeoplayAccessory.prototype = {
         }
 
         var volumeBody = {
-            defaultLevel: volume
+            level: volume
         };
 
         this._httpRequest(this.volume.setUrl, volumeBody, "PUT", function (error, response, body) {
