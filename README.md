@@ -35,7 +35,7 @@ The "type" parameter is optional, and defaults to "speaker". The "mode" paramete
 
 ## Type parameter
 
-The speaker support in HomeKit is limited - only the Mute functionality is supported on a Speaker by default and the  iOS Home app (as of iOS 12) does not support speakers at all. Third party HomeKit apps may support speakers and may work for setting volume as well (for example - the [Elgato Eve app](https://apps.apple.com/gb/app/eve-for-homekit/id917695792) works) however you will not be able to control the speaker with Siri.
+The speaker support in HomeKit is limited - only the Mute functionality is supported on a Speaker by default and the  iOS Home app (as of iOS 13) does not support speakers at all. Third party HomeKit apps may support speakers and may work for setting volume as well (for example - the [Elgato Eve app](https://apps.apple.com/gb/app/eve-for-homekit/id917695792) works) however you will not be able to control the speaker with Siri.
 
 For this reason this plugin also supports exposing the speaker as a Lightbulb (as per [this fork of the Sonos plugin](https://github.com/dominicstelljes/homebridge-sonos)) by setting "type" to "bulb" in your config.json. This will allow the Speaker to be muted/unmuted using Siri and the Home app, and allow the volume to be set as well. 
 
