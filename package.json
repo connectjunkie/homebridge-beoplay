@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "description": "Homebridge plugin to control a Bang and Olufsen (Beoplay) speaker",
   "keywords": [
-    "homebridge-plugin", 
+    "homebridge-plugin",
     "beoplay"
   ],
   "engines": {
