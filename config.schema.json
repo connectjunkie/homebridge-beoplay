@@ -1,0 +1,42 @@
+{
+    "pluginAlias": "Beoplay",
+    "pluginType": "accessory",
+    "singular": false,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string",
+          "default": "Speaker",
+          "required": true
+        },
+        "ip": {
+            "title": "IP Address",
+            "type": "string",
+            "default": "192.168.x.x",
+            "required": true
+          },
+        "type": {
+            "title": "Type of device to display in HomeKit",
+            "type": "string",
+            "default": "speaker",
+            "oneOf": [
+              { "title": "Speaker", "enum": ["speaker"] },
+              { "title": "Bulb", "enum": ["bulb"] }
+            ],
+            "required": false
+        },
+        "mode": {
+            "title": "Mute or Standby when turning off",
+            "type": "string",
+            "default": "mute",
+            "oneOf": [
+              { "title": "Mute Speaker", "enum": ["mute"] },
+              { "title": "Put into Standby Mode", "enum": ["power"] }
+            ],
+            "required": false
+        }
+      }
+    }
+  }
