@@ -1,6 +1,7 @@
 {
     "pluginAlias": "Beoplay",
     "pluginType": "accessory",
+    "headerDisplay": "Homebridge plugin for Bang & Olufsen (Beoplay) Speakers. See [the Readme](https://github.com/connectjunkie/homebridge-beoplay#readme) for limitations/side effects to be aware of",
     "singular": false,
     "schema": {
       "type": "object",
