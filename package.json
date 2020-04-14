@@ -24,5 +24,8 @@
   "dependencies": {
     "request": "^2.65.0",
     "util": "^0.12.1"
+  },
+  "devDependencies": {
+    "np": "https://github.com/pixelastic/np/tarball/c3ab2e3b053c7da0ce40a572ca1616273ac080f8"
   }
 }
