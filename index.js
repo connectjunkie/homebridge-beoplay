@@ -99,7 +99,7 @@ BeoplayAccessory.prototype = {
             .setCharacteristic(Characteristic.Manufacturer, "connectjunkie")
             .setCharacteristic(Characteristic.Model, "Beoplay")
             .setCharacteristic(Characteristic.SerialNumber, "A9 Mk2")
-            .setCharacteristic(Characteristic.FirmwareRevision, "0.1.2");
+            .setCharacteristic(Characteristic.FirmwareRevision, "0.0.6");
 
         return [informationService, beoplayService];
     },
