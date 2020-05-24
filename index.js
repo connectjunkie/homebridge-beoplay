@@ -1,8 +1,10 @@
 "use strict";
 
 var Service, Characteristic;
-const request = require("request");
+const got = require("got");
 const util = require("util");
+const syncrequest = require('sync-request');
+const tunnel = require('tunnel');
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
@@ -13,26 +15,42 @@ module.exports = function (homebridge) {
 
 function BeoplayAccessory(log, config) {
     this.log = log;
+    this.services = [];
 
     this.name = config.name;
     this.ip = config.ip;
     this.type = config.type || 'speaker';
     this.mode = config.mode || 'mute';
+    this.on = config.on || ((this.type == 'tv') ? 'input' : 'on');
+    this.default = config.default || 1;
+    this.inputs = config.inputs || [];
 
-    // Default to the Max volume of a Beoplay speaker in case this is not obtained before the volume is set the first time
+    // Default to the Max volume in case this is not obtained before the volume is set the first time
     this.maxVolume = 90;
+    this.inputList = [];
+    this.inputDetails = {};
     this.volume = {};
     this.mute = {};
     this.power = {};
+    this.input = {};
+    this.jid = '';
+    this.currentInput = '';
 
-    this.volume.statusUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume', this.ip);
-    this.volume.setUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume/Speaker/Level', this.ip);
+    this.baseUrl = util.format('http://%s:8080', this.ip);
+
+    this.deviceUrl = this.baseUrl + '/BeoDevice';
+
+    this.volume.statusUrl = this.baseUrl + '/BeoZone/Zone/Sound/Volume';
+    this.volume.setUrl = this.baseUrl + '/BeoZone/Zone/Sound/Volume/Speaker/Level';
 
     this.mute.statusUrl = this.volume.statusUrl;
-    this.mute.setUrl = util.format('http://%s:8080/BeoZone/Zone/Sound/Volume/Speaker/Muted', this.ip);
+    this.mute.setUrl = this.baseUrl + '/BeoZone/Zone/Sound/Volume/Speaker/Muted';
 
-    this.power.statusUrl = util.format('http://%s:8080/BeoDevice/powerManagement/', this.ip);
-    this.power.setUrl = util.format('http://%s:8080/BeoDevice/powerManagement/standby', this.ip);
+    this.power.statusUrl = this.baseUrl + '/BeoDevice/powerManagement';
+    this.power.setUrl = this.baseUrl + '/BeoDevice/powerManagement/standby';
+
+    this.input.statusUrl = this.baseUrl + '/BeoZone/Zone/ActiveSources';
+    this.input.setUrl = this.baseUrl + '/BeoZone/Zone/ActiveSources';
 }
 
 BeoplayAccessory.prototype = {
@@ -43,92 +61,237 @@ BeoplayAccessory.prototype = {
     },
 
     getServices: function () {
-        var beoplayService;
-
-        if (this.type == 'speaker') {
-            this.log("Creating speaker!");
-            beoplayService = new Service.Speaker(this.name);
-
-            if (this.mode == 'mute') { // we will mute the speaker when muted
-                this.log("... configuring mute characteristic");
-                beoplayService
-                    .getCharacteristic(Characteristic.Mute)
-                    .on("get", this.getMuteState.bind(this))
-                    .on("set", this.setMuteState.bind(this));
-            } else { // we will put speaker in standby when muted
-                this.log("... configuring power characteristic");
-                beoplayService
-                    .getCharacteristic(Characteristic.Mute)
-                    .on("get", this.getPowerState.bind(this))
-                    .on("set", this.setPowerState.bind(this));
-            }
-
-            this.log("... adding volume characteristic");
-            beoplayService
-                .addCharacteristic(new Characteristic.Volume())
-                .on("get", this.getVolume.bind(this))
-                .on("set", this.setVolume.bind(this));
-        } else {
-            this.log("Creating bulb!");
-            beoplayService = new Service.Lightbulb(this.name);
-
-            if (this.mode == 'mute') { // we will mute the speaker when turned off
-                this.log("... configuring on/off characteristic");
-                beoplayService
-                    .getCharacteristic(Characteristic.On)
-                    .on("get", this.getMuteState.bind(this))
-                    .on("set", this.setMuteState.bind(this));
-            } else { // we will put speaker in standby when turned off
-                this.log("... configuring on/off characteristic");
-                beoplayService
-                    .getCharacteristic(Characteristic.On)
-                    .on("get", this.getPowerState.bind(this))
-                    .on("set", this.setPowerState.bind(this));
-            }
-
-            this.log("... adding volume (brightness) characteristic");
-            beoplayService
-                .addCharacteristic(new Characteristic.Brightness())
-                .on("get", this.getVolume.bind(this))
-                .on("set", this.setVolume.bind(this));
+        // ugly synchronous call to device info. Need to figure out a better way of doing this
+        try {
+            var response = JSON.parse(syncrequest('GET', this.deviceUrl).getBody());
+            this.model = response.beoDevice.productId.productType;
+            this.serialNumber = response.beoDevice.productId.serialNumber;
+        } catch {
+            this.log("Reading device info failed");
         }
 
-        const informationService = new Service.AccessoryInformation();
+        if (this.type == 'speaker') {
+            this.prepareSpeakerService();
+        } else if (this.type == 'bulb') {
+            this.prepareBulbService();
+        } else if (this.type == 'tv') {
+            this.prepareTvService();
+        } else {
+            this.log("Incorrect value for 'type' specified");
+            return;
+        }
+
+        this.prepareInformationService();
+
+        return this.services;
+    },
+
+    prepareInformationService: function () {
+        var informationService = new Service.AccessoryInformation();
 
         informationService
-            .setCharacteristic(Characteristic.Manufacturer, "connectjunkie")
-            .setCharacteristic(Characteristic.Model, "Beoplay")
-            .setCharacteristic(Characteristic.SerialNumber, "A9 Mk2")
-            .setCharacteristic(Characteristic.FirmwareRevision, "0.1.3");
+            .setCharacteristic(Characteristic.Manufacturer, "Bang & Olufsen")
+            .setCharacteristic(Characteristic.Model, this.model)
+            .setCharacteristic(Characteristic.SerialNumber, this.serialNumber)
+            .setCharacteristic(Characteristic.FirmwareRevision, "0.2.0");
 
-        return [informationService, beoplayService];
+        this.services.push(informationService);
     },
 
-    getMuteState: function (callback) {
-        this._httpRequest(this.mute.statusUrl, null, "GET", function (error, response, body) {
-            if (error) {
-                this.log("getMuteState() failed: %s", error.message);
-                callback(error);
-            } else if (response.statusCode !== 200) {
-                this.log("getMuteState() request returned http error: %s", response.statusCode);
-                callback(new Error("getMuteState() returned http error " + response.statusCode));
+    prepareSpeakerService: function () {
+        this.log("Creating speaker");
+        let speakerService = new Service.Speaker(this.name);
+
+        if (this.mode == 'mute') { // we will mute the speaker when muted
+            speakerService
+                .getCharacteristic(Characteristic.Mute)
+                .on("get", this.getMuteState.bind(this))
+                .on("set", this.setMuteState.bind(this));
+        } else { // we will put speaker in standby when muted
+            speakerService
+                .getCharacteristic(Characteristic.Mute)
+                .on("get", this.getPowerState.bind(this))
+                .on("set", this.setPowerState.bind(this));
+        }
+
+        // add a volume setting to the speaker (not supported in the Home app or by Siri)
+        speakerService
+            .addCharacteristic(new Characteristic.Volume())
+            .on("get", this.getVolume.bind(this))
+            .on("set", this.setVolume.bind(this));
+
+        this.services.push(speakerService);
+    },
+
+    prepareBulbService: function () {
+        this.log("Creating bulb");
+        let bulbService = new Service.Lightbulb(this.name);
+
+        if (this.mode == 'mute') { // we will mute the speaker when turned off
+            bulbService
+                .getCharacteristic(Characteristic.On)
+                .on("get", this.getMuteState.bind(this))
+                .on("set", this.setMuteState.bind(this));
+        } else { // we will put speaker in standby when turned off
+            bulbService
+                .getCharacteristic(Characteristic.On)
+                .on("get", this.getPowerState.bind(this))
+                .on("set", this.setPowerState.bind(this));
+        }
+
+        // bind brightness setting to volume
+        bulbService
+            .addCharacteristic(new Characteristic.Brightness())
+            .on("get", this.getVolume.bind(this))
+            .on("set", this.setVolume.bind(this));
+
+        this.services.push(bulbService);
+    },
+
+    prepareTvService: function () {
+        this.log("Creating tv");
+
+        // Configure TV Accessory
+        let tvService = new Service.Television(this.name, "tvService");
+
+        tvService
+            .setCharacteristic(Characteristic.ConfiguredName, this.name)
+            .setCharacteristic(Characteristic.SleepDiscoveryMode, Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
+
+        tvService
+            .getCharacteristic(Characteristic.Active)
+            .on("get", this.getPowerState.bind(this))
+            .on("set", this.setPowerState.bind(this));
+
+        tvService
+            .getCharacteristic(Characteristic.ActiveIdentifier)
+            .on("get", this.getInput.bind(this))
+            .on("set", this.setInput.bind(this));
+
+        //Configure Remote Control (not currently implemented)
+        tvService
+            .getCharacteristic(Characteristic.RemoteKey)
+            .on("set", this.remoteControl.bind(this));
+
+        // Configuring Volume control
+        this.log("Creating tv speaker");
+
+        let tvSpeakerService = new Service.TelevisionSpeaker(this.name + " Volume", "volumeService");
+
+        tvSpeakerService
+            .setCharacteristic(Characteristic.Active, Characteristic.Active.ACTIVE)
+            .setCharacteristic(Characteristic.VolumeControlType, Characteristic.VolumeControlType.ABSOLUTE);
+
+        tvSpeakerService
+            .getCharacteristic(Characteristic.VolumeSelector)
+            .on("set", (newValue, callback) => {
+                this.tv.setVolume(newValue);
+                callback(null, newValue);
+            });
+
+        tvSpeakerService
+            .getCharacteristic(Characteristic.Mute)
+            .on("get", this.getMuteState.bind(this))
+            .on("set", this.setMuteState.bind(this));
+
+//        tvSpeakerService
+//            .addCharacteristic(Characteristic.Volume)
+//            .on("get", this.getVolume.bind(this))
+//            .on("set", this.setVolume.bind(this));
+
+        tvService.addLinkedService(tvSpeakerService);
+        this.services.push(tvSpeakerService);
+
+        // Configure TV inputs
+        let configuredInputs = this.setupInputs();
+        configuredInputs.forEach((input) => {
+            tvService.addLinkedService(input);
+            this.services.push(input);
+        });
+
+        this.services.push(tvService);
+    },
+
+    setupInputs: function () {
+        var configuredInputs = [];
+        var counter = 1;
+
+        this.inputs.forEach((input) => {
+            let id = input.id;
+            let name = input.name;
+            let type = this.determineInputType(input.type);
+            this.log("Adding input " + counter + ": Name: " + name + ", Type: " + input.type);
+
+            configuredInputs.push(this.createInputSource(id, name, counter, type));
+            counter = counter + 1;
+        });
+        return configuredInputs;
+    },
+
+    createInputSource: function (id, name, number, type) {
+        var input = new Service.InputSource(id.toLowerCase().replace(" ", ""), name);
+        input
+            .setCharacteristic(Characteristic.Identifier, number)
+            .setCharacteristic(Characteristic.ConfiguredName, name)
+            .setCharacteristic(Characteristic.InputSourceType, type)
+            .setCharacteristic(Characteristic.IsConfigured, Characteristic.IsConfigured.CONFIGURED);
+
+        return input;
+    },
+
+    determineInputType: function (type) {
+        switch (type) {
+            case "TV":
+                return Characteristic.InputSourceType.TUNER;
+            case "HDMI":
+                return Characteristic.InputSourceType.HDMI;
+            case "APPLICATION":
+                return Characteristic.InputSourceType.APPLICATION;
+            default:
+                return Characteristic.InputSourceType.OTHER;
+        }
+    },
+
+//   parseInputs: async function (callback) {
+//       const response = await this._httpRequest(this.input.statusUrl, null, "GET");
+//
+//        if (!response) {
+//            this.log("getInput() request failed");
+//            callback(new Error("getInput() failed"));
+//        } else {
+//            this.inputList = response.body.primaryExperience.source._capabilities.value.id;
+//            this.log(this.inputList);
+//
+//            this.jid = response.headers['device-jid'];
+//            this.log(this.jid);
+//
+//            this.currentInput = response.body.activeSources.primary;
+//            this.log("Current selected input is %s", this.currentInput);
+//            callback(null, this.currentInput);
+//        }
+//    },
+
+    getMuteState: async function (callback) {
+        const response = await this._httpRequest(this.mute.statusUrl, null, "GET");
+
+        if (!response) {
+            this.log("getMuteState() failed");
+            callback(new Error("getMuteState() failed"));
+        } else {
+            const muted = response.body.volume.speaker.muted;
+            this.log("Speaker is currently %s", muted ? "MUTED" : "NOT MUTED");
+
+            if (this.type == 'speaker') {
+                // return the mute state correctly
+                callback(null, muted);
             } else {
-                const muted = body.volume.speaker.muted;
-                this.log("Speaker is currently %s", muted ? "MUTED" : "NOT MUTED");
-
-                if (this.type == 'speaker') {
-                    // return the mute state correctly
-                    callback(null, muted);
-                } else {
-                    // return the inverse
-                    callback(null, !muted);
-                }
-
+                // return the inverse
+                callback(null, !muted);
             }
-        }.bind(this));
+        }
     },
 
-    setMuteState: function (muted, callback) {
+    setMuteState: async function (muted, callback) {
         var muteBody = {
             muted: muted
         };
@@ -138,102 +301,92 @@ BeoplayAccessory.prototype = {
             muteBody.muted = !muted;
         }
 
-        this._httpRequest(this.mute.setUrl, muteBody, "PUT", function (error, response, body) {
-            if (error) {
-                this.log("setMuteState() failed: %s", error.message);
-                callback(error);
-            } else if (response.statusCode !== 200) {
-                this.log("setMuteState() request returned http error: %s", response.statusCode);
-                callback(new Error("setMuteState() returned http error " + response.statusCode));
-            } else {
-                this.log("setMuteState() successfully set mute state to %s", muted ? "ON" : "OFF");
+        const response = await this._httpRequest(this.mute.setUrl, muteBody, "PUT");
 
-                callback(undefined, body);
-            }
-        }.bind(this));
-    },
-
-    getPowerState: function (callback) {
-        this._httpRequest(this.power.statusUrl, null, "GET", function (error, response, body) {
-            if (error) {
-                this.log("getPowerState() failed: %s", error.message);
-                callback(error);
-            } else if (response.statusCode !== 200) {
-                this.log("getPowerState() request returned http error: %s", response.statusCode);
-                callback(new Error("getMuteState() returned http error " + response.statusCode));
-            } else {
-                const power = body.profile.powerManagement.standby.powerState;
-                this.log("Speaker is currently %s", power);
-
-                var state;
-                if (power == "on") {
-                    state = true;
-                } else {
-                    state = false;
-                }
-
-                if (this.type == 'speaker') {
-                    // return the power state reversed
-                    callback(null, !state);
-                } else {
-                    // return correctly
-                    callback(null, state);
-                }
-            }
-        }.bind(this));
-    },
-
-    setPowerState: function (power, callback) {
-        var powerBody = {
-            standby: {
-                powerState: power ? "on" : "standby"
-            }
-        };
-
-        if (this.type == 'speaker') {
-            // if a speaker, we need to invert the state we are setting
-            powerBody.standby.powerState = !power ? "on" : "standby";
+        if (!response) {
+            this.log("setMuteState() failed");
+            callback(new Error("setMuteState() failed"));
+        } else {
+            this.log("setMuteState() successfully set mute state to %s", muted ? "ON" : "OFF");
+            callback(undefined, response.body);
         }
+    },
 
-        this._httpRequest(this.power.setUrl, powerBody, "PUT", function (error, response, body) {
-            if (error) {
-                this.log("setPowerState() failed: %s", error.message);
-                callback(error);
-            } else if (response.statusCode !== 200) {
-                this.log("setPowerState() request returned http error: %s", response.statusCode);
-                callback(new Error("setPowerState() returned http error " + response.statusCode));
+    getPowerState: async function (callback) {
+        const response = await this._httpRequest(this.power.statusUrl, null, "GET");
+
+        if (!response) {
+            this.log("getPowerState() request failed");
+            callback(new Error("getMuteState() failed"));
+        } else {
+            const power = response.body.profile.powerManagement.standby.powerState;
+            this.log("Speaker is currently %s", power);
+
+            var state;
+            if (power == "on") {
+                state = true;
+            } else {
+                state = false;
+            }
+
+            if (this.type == 'speaker') {
+                // return the power state reversed
+                callback(null, !state);
+            } else {
+                // return correctly
+                callback(null, state);
+            }
+        }
+    },
+
+    setPowerState: async function (power, callback) {
+        // If this is a TV and we're turning it on, we turn on by setting an input
+        if (this.type == 'tv' && power == true) {
+            this.setInput(this.default, callback);
+        } else { // If not use the API
+            var powerBody = {
+                standby: {
+                    powerState: power ? "on" : "standby"
+                }
+            };
+
+            if (this.type == 'speaker') {
+                // if a speaker, we need to invert the state we are setting
+                powerBody.standby.powerState = !power ? "on" : "standby";
+            }
+
+            const response = await this._httpRequest(this.power.setUrl, powerBody, "PUT");
+            if (!response) {
+                this.log("setPowerState() request failed");
+                callback(new Error("setPowerState() failed"));
             } else {
                 if (this.type == 'speaker') {
                     this.log("setPowerState() successfully set power state to %s", !power ? "ON" : "STANDBY");
                 } else {
                     this.log("setPowerState() successfully set power state to %s", power ? "ON" : "STANDBY");
                 }
-                callback(undefined, body);
+                callback(undefined, response.body);
             }
-        }.bind(this));
+        }
     },
 
-    getVolume: function (callback) {
-        this._httpRequest(this.volume.statusUrl, null, "GET", function (error, response, body) {
-            if (error) {
-                this.log("getVolume() failed: %s", error.message);
-                callback(error);
-            } else if (response.statusCode !== 200) {
-                this.log("getVolume() request returned http error: %s", response.statusCode);
-                callback(new Error("getVolume() returned http error " + response.statusCode));
-            } else {
-                const volume = parseInt(body.volume.speaker.level);
-                this.log("Speaker's volume is at %s %", volume);
+    getVolume: async function (callback) {
+        const response = await this._httpRequest(this.volume.statusUrl, null, "GET");
 
-                this.maxVolume = parseInt(body.volume.speaker.range.maximum);
-                this.log("Speaker's maximum volume is set to %s %", this.maxVolume);
+        if (!response) {
+            this.log("getVolume() request failed");
+            callback(new Error("getVolume() failed"));
+        } else {
+            const volume = parseInt(response.body.volume.speaker.level);
+            this.log("Speaker's volume is at %s %", volume);
 
-                callback(null, volume);
-            }
-        }.bind(this));
+            this.maxVolume = parseInt(response.body.volume.speaker.range.maximum);
+            this.log("Speaker's maximum volume is set to %s %", this.maxVolume);
+            callback(null, volume);
+        }
     },
 
-    setVolume: function (volume, callback) {
+    setVolume: async function (volume, callback) {
         if (volume > this.maxVolume) {
             volume = this.maxVolume;
         }
@@ -242,36 +395,91 @@ BeoplayAccessory.prototype = {
             level: volume
         };
 
-        this._httpRequest(this.volume.setUrl, volumeBody, "PUT", function (error, response, body) {
-            if (error) {
-                this.log("setVolume() failed: %s", error.message);
-                callback(error);
-            } else if (response.statusCode !== 200) {
-                this.log("setVolume() request returned http error: %s", response.statusCode);
-                callback(new Error("setVolume() returned http error " + response.statusCode));
-            } else {
-                this.log("setVolume() successfully set volume to %s", volume);
+        const response = await this._httpRequest(this.volume.setUrl, volumeBody, "PUT");
 
-                callback(undefined, body);
-            }
-        }.bind(this));
+        if (!response) {
+            this.log("setVolume() request failed");
+            callback(new Error("setVolume() failed"));
+        } else {
+            this.log("setVolume() successfully set volume to %s", volume);
+            callback(undefined, response.body);
+        }
     },
 
-    _httpRequest: function (url, body, method, callback) {
+    getInput: async function (callback) {
+        const response = await this._httpRequest(this.input.statusUrl, null, "GET");
+
+        if (!response) {
+            this.log("getInput() request failed");
+            callback(new Error("getInput() failed"));
+        } else {
+            const input = response.body.activeSources.primary;
+            this.log("Active input is %s", input);
+
+            let index = this.inputs.findIndex(function (x) {
+                return x.apiID == input
+            });
+            callback(null, index + 1);
+        }
+    },
+
+    setInput: async function (desiredInput, callback) {
+        let input = this.inputs[desiredInput - 1];
+
+        var inputBody = {
+            primaryExperience: {
+                source: {
+                    id: input.apiID,
+                    friendlyName: '',
+                    product: {
+                        jid: this.jid,
+                        friendlyName: ''
+                    }
+                }
+            }
+        };
+
+        const response = await this._httpRequest(this.input.setUrl, inputBody, "POST");
+
+        if (!response) {
+            this.log("setInput() request failed");
+            callback(new Error("setInput() failed"));
+        } else {
+            this.log("Input set to %s", input.name);
+            callback(null, input);
+        }
+    },
+
+    remoteControl: function (muted, callback) {
+        this.log("Remote Control Action: " + action);
+        callback(null, action);
+    },
+
+    _httpRequest: async function (url, body, method) {
         var options = {
-            url: url,
             method: method,
-            json: true,
-            rejectUnauthorized: false
+            responseType: 'json',
+            agent: {
+                http: tunnel.httpOverHttp({
+                    proxy: {
+                        host: 'localhost',
+                        port: 8080
+                    }
+                })
+            }
         }
 
         if (body !== null) {
-            options.body = body;
+            options.json = body;
         }
 
-        request(options, function (error, response, body) {
-                callback(error, response, body);
-            }
-        )
+        try {
+            const response = await got(url, options);
+            return response;
+        } catch (error) {
+            this.log("Error on HTTP request");
+            this.log(error);
+            return null;
+        }
     }
 };
