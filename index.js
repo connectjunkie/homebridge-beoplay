@@ -250,8 +250,6 @@ BeoplayAccessory.prototype = {
                 return Characteristic.InputSourceType.APPLICATION;
             case "AIRPLAY":
                 return Characteristic.InputSourceType.AIRPLAY;
-            case "COMPONENT_VIDEO":
-                return Characteristic.InputSourceType.COMPONENT_VIDEO;
             default:
                 return Characteristic.InputSourceType.OTHER;
         }
