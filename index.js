@@ -24,6 +24,7 @@ function BeoplayAccessory(log, config) {
     this.on = config.on || ((this.type == 'tv') ? 'input' : 'on');
     this.default = config.default || 1;
     this.inputs = config.inputs || [];
+    this.debug = config.debug || false;
 
     // Default to the Max volume in case this is not obtained before the volume is set the first time
     this.maxVolume = 90;
@@ -194,10 +195,10 @@ BeoplayAccessory.prototype = {
             .on("get", this.getMuteState.bind(this))
             .on("set", this.setMuteState.bind(this));
 
-//        tvSpeakerService
-//            .addCharacteristic(Characteristic.Volume)
-//            .on("get", this.getVolume.bind(this))
-//            .on("set", this.setVolume.bind(this));
+        tvSpeakerService
+            .getCharacteristic(Characteristic.Volume)
+            .on("get", this.getVolume.bind(this))
+            .on("set", this.setVolume.bind(this));
 
         tvService.addLinkedService(tvSpeakerService);
         this.services.push(tvSpeakerService);
@@ -247,29 +248,33 @@ BeoplayAccessory.prototype = {
                 return Characteristic.InputSourceType.HDMI;
             case "APPLICATION":
                 return Characteristic.InputSourceType.APPLICATION;
+            case "AIRPLAY":
+                return Characteristic.InputSourceType.AIRPLAY;
+            case "COMPONENT_VIDEO":
+                return Characteristic.InputSourceType.COMPONENT_VIDEO;
             default:
                 return Characteristic.InputSourceType.OTHER;
         }
     },
 
-//   parseInputs: async function (callback) {
-//       const response = await this._httpRequest(this.input.statusUrl, null, "GET");
-//
-//        if (!response) {
-//            this.log("getInput() request failed");
-//            callback(new Error("getInput() failed"));
-//        } else {
-//            this.inputList = response.body.primaryExperience.source._capabilities.value.id;
-//            this.log(this.inputList);
-//
-//            this.jid = response.headers['device-jid'];
-//            this.log(this.jid);
-//
-//            this.currentInput = response.body.activeSources.primary;
-//            this.log("Current selected input is %s", this.currentInput);
-//            callback(null, this.currentInput);
-//        }
-//    },
+    //   parseInputs: async function (callback) {
+    //       const response = await this._httpRequest(this.input.statusUrl, null, "GET");
+    //
+    //        if (!response) {
+    //            this.log("getInput() request failed");
+    //            callback(new Error("getInput() failed"));
+    //        } else {
+    //            this.inputList = response.body.primaryExperience.source._capabilities.value.id;
+    //            this.log(this.inputList);
+    //
+    //            this.jid = response.headers['device-jid'];
+    //            this.log(this.jid);
+    //
+    //            this.currentInput = response.body.activeSources.primary;
+    //            this.log("Current selected input is %s", this.currentInput);
+    //            callback(null, this.currentInput);
+    //        }
+    //    },
 
     getMuteState: async function (callback) {
         const response = await this._httpRequest(this.mute.statusUrl, null, "GET");
@@ -307,7 +312,7 @@ BeoplayAccessory.prototype = {
             this.log("setMuteState() failed");
             callback(new Error("setMuteState() failed"));
         } else {
-            this.log("setMuteState() successfully set mute state to %s", muted ? "ON" : "OFF");
+            this.log("Mute state set to %s", muted ? "ON" : "OFF");
             callback(undefined, response.body);
         }
     },
@@ -361,9 +366,9 @@ BeoplayAccessory.prototype = {
                 callback(new Error("setPowerState() failed"));
             } else {
                 if (this.type == 'speaker') {
-                    this.log("setPowerState() successfully set power state to %s", !power ? "ON" : "STANDBY");
+                    this.log("Power state set to %s", !power ? "ON" : "STANDBY");
                 } else {
-                    this.log("setPowerState() successfully set power state to %s", power ? "ON" : "STANDBY");
+                    this.log("Power state set to %s", power ? "ON" : "STANDBY");
                 }
                 callback(undefined, response.body);
             }
@@ -378,10 +383,10 @@ BeoplayAccessory.prototype = {
             callback(new Error("getVolume() failed"));
         } else {
             const volume = parseInt(response.body.volume.speaker.level);
-            this.log("Speaker's volume is at %s %", volume);
+            this.log("Volume is at %s %", volume);
 
             this.maxVolume = parseInt(response.body.volume.speaker.range.maximum);
-            this.log("Speaker's maximum volume is set to %s %", this.maxVolume);
+            this.log("Maximum volume is set to %s %", this.maxVolume);
             callback(null, volume);
         }
     },
@@ -401,7 +406,7 @@ BeoplayAccessory.prototype = {
             this.log("setVolume() request failed");
             callback(new Error("setVolume() failed"));
         } else {
-            this.log("setVolume() successfully set volume to %s", volume);
+            this.log("Volume set to %s", volume);
             callback(undefined, response.body);
         }
     },
@@ -414,7 +419,12 @@ BeoplayAccessory.prototype = {
             callback(new Error("getInput() failed"));
         } else {
             const input = response.body.activeSources.primary;
-            this.log("Active input is %s", input);
+
+            if (input) {
+                this.log("Active input is %s", input);
+            } else {
+                this.log("No active input currently set");
+            }
 
             let index = this.inputs.findIndex(function (x) {
                 return x.apiID == input
@@ -458,8 +468,11 @@ BeoplayAccessory.prototype = {
     _httpRequest: async function (url, body, method) {
         var options = {
             method: method,
-            responseType: 'json',
-            agent: {
+            responseType: 'json'
+        }
+
+        if (this.debug) {
+            options.agent = {
                 http: tunnel.httpOverHttp({
                     proxy: {
                         host: 'localhost',
