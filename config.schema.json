@@ -1,44 +1,126 @@
 {
-    "pluginAlias": "Beoplay",
-    "pluginType": "accessory",
-    "headerDisplay": "Homebridge plugin for Bang & Olufsen (Beoplay) TVs and Speakers. See [the Readme](https://github.com/connectjunkie/homebridge-beoplay#readme) for limitations/side effects to be aware of",
-    "singular": false,
-    "schema": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "title": "Name",
-          "type": "string",
-          "default": "Speaker",
-          "required": true
-        },
-        "ip": {
-            "title": "IP Address",
-            "type": "string",
-            "default": "192.168.x.x",
-            "required": true
+  "pluginAlias": "Beoplay",
+  "pluginType": "accessory",
+  "headerDisplay": "Homebridge plugin for Bang & Olufsen (Beoplay) TVs and Speakers. See [the Readme](https://github.com/connectjunkie/homebridge-beoplay#readme) for limitations/side effects to be aware of",
+  "singular": false,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "Speaker",
+        "required": true
+      },
+      "ip": {
+        "title": "IP Address",
+        "type": "string",
+        "default": "192.168.x.x",
+        "required": true
+      },
+      "type": {
+        "title": "Type of device to display in HomeKit",
+        "type": "string",
+        "default": "speaker",
+        "oneOf": [{
+            "title": "Speaker",
+            "enum": ["speaker"]
           },
-        "type": {
-            "title": "Type of device to display in HomeKit",
-            "type": "string",
-            "default": "speaker",
-            "oneOf": [
-              { "title": "Speaker", "enum": ["speaker"] },
-              { "title": "Bulb", "enum": ["bulb"] },
-              { "title": "TV", "enum": ["tv"]}
-            ],
-            "required": false
-        },
-        "mode": {
-            "title": "Mute or Standby when turning off",
-            "type": "string",
-            "default": "mute",
-            "oneOf": [
-              { "title": "Mute Speaker", "enum": ["mute"] },
-              { "title": "Put into Standby Mode", "enum": ["power"] }
-            ],
-            "required": false
+          {
+            "title": "Bulb",
+            "enum": ["bulb"]
+          },
+          {
+            "title": "TV",
+            "enum": ["tv"]
+          }
+        ],
+        "required": false
+      },
+      "mode": {
+        "title": "Mute or Standby when turning off",
+        "type": "string",
+        "default": "mute",
+        "oneOf": [{
+            "title": "Mute Speaker",
+            "enum": ["mute"]
+          },
+          {
+            "title": "Put into Standby Mode",
+            "enum": ["power"]
+          }
+        ],
+        "required": false
+      },
+      "on": {
+        "title": "Power on via setting and input or via the API",
+        "type": "string",
+        "default": "on",
+        "oneOf": [{
+            "title": "Power on via the API",
+            "enum": ["on"]
+          },
+          {
+            "title": "Power on via setting an input (default for TVs)",
+            "enum": ["input"]
+          }
+        ],
+        "required": false
+      },
+      "default": {
+        "title": "Input used to power on the device by default (when using that functionality)",
+        "type": "integer",
+        "default": 1,
+        "required": false
+      },
+      "inputs": {
+        "type": "array",
+        "items": {
+          "title": "Inputs to be configured",
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name of the Input",
+              "type": "string",
+              "default": "HDMI 1",
+              "required": true
+            },
+            "type": {
+              "title": "Input type",
+              "type": "string",
+              "default": "HDMI",
+              "oneOf": [{
+                "title": "TV Tuner",
+                "enum": ["TUNER"]
+              },
+              {
+                "title": "HDMI",
+                "enum": ["HDMI"]
+              },
+              {
+                "title": "Application",
+                "enum": ["APPLICATION"]
+              },
+              {
+                "title": "AirPlay",
+                "enum": ["AIRPLAY"]
+              },
+              {
+                "title": "Other",
+                "enum": ["OTHER"]
+              }],
+              "required": true
+            },
+            "apiID": {
+              "title": "API id value from the BeoPlay API for the input",
+              "type": "string",
+              "default": "radio:1111.222222.33333333@products.bang-olufsen.com",
+              "required": true,
+              "description": "API id values can be looked up from your device using a browser at the URL path hxxp://x.x.x.x/BeoZone/Zone/ActiveSources/"
+            }
+          }
         }
       }
     }
   }
+}
