@@ -5,6 +5,7 @@ const got = require("got");
 const util = require("util");
 const syncrequest = require('sync-request');
 const tunnel = require('tunnel');
+const isip = require('is-ip');
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
@@ -17,7 +18,12 @@ function BeoplayAccessory(log, config) {
     this.log = log;
     this.services = [];
 
-    this.name = config.name;
+    this.name = config.name || "B&O Speaker";
+
+    if (!isip(config.ip)) {
+        this.log('Invalid IP address supplied');
+        return;
+    }
     this.ip = config.ip;
     this.type = config.type || 'speaker';
     this.mode = config.mode || 'mute';
@@ -62,6 +68,11 @@ BeoplayAccessory.prototype = {
     },
 
     getServices: function () {
+        if (!this.ip) {
+            // IP address wasn't supplied or is incorrect - fail gracefully
+            return;
+        }
+        
         // ugly synchronous call to device info. Need to figure out a better way of doing this
         try {
             var response = JSON.parse(syncrequest('GET', this.deviceUrl).getBody());
