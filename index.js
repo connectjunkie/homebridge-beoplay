@@ -218,19 +218,18 @@ BeoplayAccessory.prototype = {
         var counter = 1;
 
         this.inputs.forEach((input) => {
-            let id = input.id;
             let name = input.name;
             let type = this.determineInputType(input.type);
             this.log("Adding input " + counter + ": Name: " + name + ", Type: " + input.type);
 
-            configuredInputs.push(this.createInputSource(id, name, counter, type));
+            configuredInputs.push(this.createInputSource(name, counter, type));
             counter = counter + 1;
         });
         return configuredInputs;
     },
 
-    createInputSource: function (id, name, number, type) {
-        var input = new Service.InputSource(id.toLowerCase().replace(" ", ""), name);
+    createInputSource: function (name, number, type) {
+        var input = new Service.InputSource(name.toLowerCase().replace(" ", ""), name);
         input
             .setCharacteristic(Characteristic.Identifier, number)
             .setCharacteristic(Characteristic.ConfiguredName, name)
@@ -344,7 +343,7 @@ BeoplayAccessory.prototype = {
 
     setPowerState: async function (power, callback) {
         // If this is a TV and we're turning it on, we turn on by setting an input
-        if (this.type == 'tv' && power == true) {
+        if (this.on == 'input') {
             this.setInput(this.default, callback);
         } else { // If not use the API
             var powerBody = {
