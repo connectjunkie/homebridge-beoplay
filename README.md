@@ -35,7 +35,7 @@ Option | Default | Explanation
 `mode` | `mute` | What behaviour to perform for speaker or bulb integrations when the device is muted (speaker integration) or turned off (bulb). Values can be "mute" or "power" - please see the notes below
 `on` | `input` if type is `tv`, otherwise `on` | Define whether to power on the device from standby using the API (available for speakers) or via setting an input (available for both speakers and TVs)
 `default` | `1` | The input number selected to power on the device when coming out of standby
-`inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. See below for the format.
+`inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format.
 
 # Notes
 
