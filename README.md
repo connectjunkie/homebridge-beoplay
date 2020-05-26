@@ -70,7 +70,7 @@ Inputs for the TV integation type are defined as follows:
 The values are as follows:
 - `name`: Name for the input in the interface
 - `type`: Can be one of `TUNER`, `HDMI`, `APPLICATION`, `AIRPLAY`, or `OTHER`
-- `apiID`: This is the `id` value for the input in the BeoPlay API. This can be found by browsing to the following URL path on your device: /BeoZone/Zone/ActiveSources/ 
+- `apiID`: This is the `id` value for the input in the BeoPlay API. This can be found by browsing to the following URL path on your device: hxxp://x.x.x.x/BeoZone/Zone/ActiveSources/ 
 
 # Credits
 This plugin started life as a fork of the [homebridge-http-speaker](https://github.com/Supereg/homebridge-http-speaker) plugin by Supereg
