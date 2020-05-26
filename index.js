@@ -34,18 +34,16 @@ function BeoplayAccessory(log, config) {
 
     // Default to the Max volume in case this is not obtained before the volume is set the first time
     this.maxVolume = 90;
-    this.inputList = [];
-    this.inputDetails = {};
     this.volume = {};
     this.mute = {};
     this.power = {};
     this.input = {};
     this.jid = '';
-    this.currentInput = '';
 
     this.baseUrl = util.format('http://%s:8080', this.ip);
 
     this.deviceUrl = this.baseUrl + '/BeoDevice';
+    this.sourceUrl = this.baseUrl + '/BeoZone/Zone/Sources/';
 
     this.volume.statusUrl = this.baseUrl + '/BeoZone/Zone/Sound/Volume';
     this.volume.setUrl = this.baseUrl + '/BeoZone/Zone/Sound/Volume/Speaker/Level';
@@ -72,12 +70,14 @@ BeoplayAccessory.prototype = {
             // IP address wasn't supplied or is incorrect - fail gracefully
             return;
         }
-        
+
         // ugly synchronous call to device info. Need to figure out a better way of doing this
         try {
-            var response = JSON.parse(syncrequest('GET', this.deviceUrl).getBody());
+            var res = syncrequest('GET', this.deviceUrl);
+            var response = JSON.parse(res.getBody());
             this.model = response.beoDevice.productId.productType;
             this.serialNumber = response.beoDevice.productId.serialNumber;
+            this.jid = res.headers['device-jid'];
         } catch {
             this.log("Reading device info failed");
         }
@@ -215,6 +215,28 @@ BeoplayAccessory.prototype = {
         this.services.push(tvSpeakerService);
 
         // Configure TV inputs
+
+        if (!this.inputs.length) {
+            // if the user hasn't supplied their own inputs
+            // ugly synchronous call to device info. Need to figure out a better way of doing this
+            var response;
+
+            try {
+                response = JSON.parse(syncrequest('GET', this.sourceUrl).getBody());
+            } catch {
+                this.log("Reading source input info failed");
+            }
+
+            response.sources.forEach((source) => {
+                let entry = {
+                    name: source[1].friendlyName,
+                    type: this.mapType(source[1].sourceType.type),
+                    apiID: source[1].id
+                }
+                this.inputs.push(entry);
+            });
+        }
+
         let configuredInputs = this.setupInputs();
         configuredInputs.forEach((input) => {
             tvService.addLinkedService(input);
@@ -222,6 +244,27 @@ BeoplayAccessory.prototype = {
         });
 
         this.services.push(tvService);
+    },
+
+    mapType: function (type) {
+        switch (type) {
+            case "TV":
+                return "TV";
+            case "HDMI":
+                return "HDMI";
+            case "YOUTUBE":
+                return "APPLICATION";
+            case "TUNEIN":
+                return "APPLICATION";
+            case "DEEZER":
+                return "APPLICATION";
+            case "SPOTIFY":
+                return "APPLICATION";
+            case "AIRPLAY":
+                return "AIRPLAY";
+            default:
+                return "OTHER";
+        }
     },
 
     setupInputs: function () {
@@ -264,25 +307,6 @@ BeoplayAccessory.prototype = {
                 return Characteristic.InputSourceType.OTHER;
         }
     },
-
-    //   parseInputs: async function (callback) {
-    //       const response = await this._httpRequest(this.input.statusUrl, null, "GET");
-    //
-    //        if (!response) {
-    //            this.log("getInput() request failed");
-    //            callback(new Error("getInput() failed"));
-    //        } else {
-    //            this.inputList = response.body.primaryExperience.source._capabilities.value.id;
-    //            this.log(this.inputList);
-    //
-    //            this.jid = response.headers['device-jid'];
-    //            this.log(this.jid);
-    //
-    //            this.currentInput = response.body.activeSources.primary;
-    //            this.log("Current selected input is %s", this.currentInput);
-    //            callback(null, this.currentInput);
-    //        }
-    //    },
 
     getMuteState: async function (callback) {
         const response = await this._httpRequest(this.mute.statusUrl, null, "GET");
