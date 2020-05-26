@@ -90,25 +90,26 @@
               "type": "string",
               "default": "HDMI",
               "oneOf": [{
-                "title": "TV Tuner",
-                "enum": ["TUNER"]
-              },
-              {
-                "title": "HDMI",
-                "enum": ["HDMI"]
-              },
-              {
-                "title": "Application",
-                "enum": ["APPLICATION"]
-              },
-              {
-                "title": "AirPlay",
-                "enum": ["AIRPLAY"]
-              },
-              {
-                "title": "Other",
-                "enum": ["OTHER"]
-              }],
+                  "title": "TV Tuner",
+                  "enum": ["TUNER"]
+                },
+                {
+                  "title": "HDMI",
+                  "enum": ["HDMI"]
+                },
+                {
+                  "title": "Application",
+                  "enum": ["APPLICATION"]
+                },
+                {
+                  "title": "AirPlay",
+                  "enum": ["AIRPLAY"]
+                },
+                {
+                  "title": "Other",
+                  "enum": ["OTHER"]
+                }
+              ],
               "required": true
             },
             "apiID": {
@@ -118,7 +119,8 @@
               "required": true,
               "description": "API id values can be looked up from your device using a browser at the URL path hxxp://x.x.x.x/BeoZone/Zone/ActiveSources/"
             }
-          }
+          },
+          "required": false
         }
       }
     }
