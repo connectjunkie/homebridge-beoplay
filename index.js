@@ -16,7 +16,6 @@ module.exports = function (homebridge) {
 
 function BeoplayAccessory(log, config) {
     this.log = log;
-    this.api = api;
     this.services = [];
 
     this.name = config.name || "B&O Speaker";
