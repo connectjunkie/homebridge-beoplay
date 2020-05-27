@@ -1,6 +1,6 @@
 # Bang & Olufsen/Beoplay accessory
 
-This accessory allows you to control Bang & Olufsen BeoPlay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a BeoPlay A9 mk2 speaker and Beoplay V1 TV, so reports of success or issues with other BeoPlay B&O devices are welcome.
+This accessory allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Beoplay A9 mk2 speaker and Beoplay V1 TV, so reports of success or issues with other Beoplay B&O devices are welcome.
 
 Depending on which integration option is selected (speaker, bulb or TV) will depend on which features can be controlled - speaker and bulb integrations support volume and either mute or standby/enable, while the TV integration also allows selection of active input. Note that the plugin honours the B&O speaker's "maximum volume" setting, so trying to set the volume to higher than this will set the volume to the maximum, which may not be reflected in your HomeKit app until you refresh.
 
@@ -45,7 +45,7 @@ The speaker support in HomeKit is limited - only the Mute functionality is suppo
 
 For this reason this plugin also supports exposing the speaker as a Lightbulb (as per [this fork of the Sonos plugin](https://github.com/dominicstelljes/homebridge-sonos)) by setting "type" to "bulb" in your config.json. This will allow the Speaker to be muted/unmuted using Siri and the Home app, and allow the volume to be set as well. This will have some side effects though - Siri will mute the speaker if you say "Turn off the lights" and will change the volume if you say "Dim the lights to 20%". 
 
-The television suppport introduced with iOS 12.2 is also supported for exposing the device (regardless of whether the device is actually a TV). This support is currently incomplete as it is a work in progress, and there is a limitation in that only one TV can be exposed via Homebridge as an accessory at a time. This may mean that you won't be able to use this integration type if you already have another Homebridge TV plugin installed, or with multiple BeoPlay devices - unless you have multiple instances of Homebridge running. Also - be aware that TVs are currently only visible in the Apple Home app, so you will not be able to interact with them in a third party HomeKit application.
+The television suppport introduced with iOS 12.2 is also supported for exposing the device (regardless of whether the device is actually a TV). This support is currently incomplete as it is a work in progress, and there is a limitation in that only one TV can be exposed via Homebridge as an accessory at a time. This may mean that you won't be able to use this integration type if you already have another Homebridge TV plugin installed, or with multiple Beoplay devices - unless you have multiple instances of Homebridge running. Also - be aware that TVs are currently only visible in the Apple Home app, so you will not be able to interact with them in a third party HomeKit application.
 
 ## Mode parameter
 
@@ -70,7 +70,7 @@ Inputs for the TV integation type are defined as follows:
 The values are as follows:
 - `name`: Name for the input in the interface
 - `type`: Can be one of `TV`, `HDMI`, `APPLICATION`, `AIRPLAY`, or `OTHER`
-- `apiID`: This is the `id` value for the input in the BeoPlay API. This can be found by browsing to the following URL path on your device: hxxp://x.x.x.x/BeoZone/Zone/ActiveSources/ 
+- `apiID`: This is the `id` value for the input in the Beoplay API. This can be found by browsing to the following URL path on your device: hxxp://x.x.x.x/BeoZone/Zone/ActiveSources/ 
 
 # Credits
 This plugin started life as a fork of the [homebridge-http-speaker](https://github.com/Supereg/homebridge-http-speaker) plugin by Supereg
