@@ -16,6 +16,7 @@ module.exports = function (homebridge) {
 
 function BeoplayAccessory(log, config) {
     this.log = log;
+    this.api = api;
     this.services = [];
 
     this.name = config.name || "B&O Speaker";
@@ -237,7 +238,7 @@ BeoplayAccessory.prototype = {
                 this.inputs.push(entry);
 
                 // if this is a TV, ensure that we are using the input method of powering on 
-                if (source[1].sourceType.type=="TV" && this.on=="on") {
+                if (source[1].sourceType.type == "TV" && this.on == "on") {
                     this.on = 'input';
                 }
             });
@@ -384,7 +385,7 @@ BeoplayAccessory.prototype = {
 
     setPowerState: async function (power, callback) {
         // If this is a TV and we're turning it on, we turn on by setting an input
-        if (this.on == 'input' && power==true) {
+        if (this.on == 'input' && power == true) {
             this.setInput(this.default, callback);
         } else { // If not use the API
             var powerBody = {
@@ -498,9 +499,50 @@ BeoplayAccessory.prototype = {
         }
     },
 
-    remoteControl: function (muted, callback) {
-        this.log("Remote Control Action: " + action);
-        callback(null, action);
+    remoteControl: function (action, callback) {
+        switch (action) {
+            case 0: // Rewind
+                this.log("REW");
+                break;
+            case 1: // Fast Forward
+                this.log("FF");
+                break;
+            case 2: // Next Track
+                this.log("SKIP_NEXT");
+                break;
+            case 3: // Previous Track
+                this.log("SKIP_PREV");
+                break;
+            case 4: // Up Arrow
+                this.log("UP");
+                break;
+            case 5: // Down Arrow
+                this.log("DOWN");
+                break;
+            case 6: // Left Arrow
+                this.log("LEFT");
+                break;
+            case 7: // Right Arrow
+                this.log("RIGHT");
+                break;
+            case 8: // Select
+                this.log("ENTER");
+                break;
+            case 9: // Back
+                this.log("RETURN");
+                break;
+            case 10: // Exit
+                this.log("CANCEL");
+                break;
+            case 11: // Play / Pause
+                this.log("PLAY");
+                break;
+            case 15: // Information
+                this.log("HOME");
+                break;
+        }
+
+        callback(null);
     },
 
     _httpRequest: async function (url, body, method) {
