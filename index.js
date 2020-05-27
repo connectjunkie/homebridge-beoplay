@@ -384,7 +384,7 @@ BeoplayAccessory.prototype = {
 
     setPowerState: async function (power, callback) {
         // If this is a TV and we're turning it on, we turn on by setting an input
-        if (this.on == 'input') {
+        if (this.on == 'input' && power==true) {
             this.setInput(this.default, callback);
         } else { // If not use the API
             var powerBody = {
