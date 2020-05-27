@@ -31,6 +31,7 @@ function BeoplayAccessory(log, config) {
     this.default = config.default || 1;
     this.inputs = config.inputs || [];
     this.debug = config.debug || false;
+    this.debugproxy = config.debugproxy;
 
     // Default to the Max volume in case this is not obtained before the volume is set the first time
     this.maxVolume = 90;
@@ -512,7 +513,7 @@ BeoplayAccessory.prototype = {
             options.agent = {
                 http: tunnel.httpOverHttp({
                     proxy: {
-                        host: 'localhost',
+                        host: this.debugproxy,
                         port: 8080
                     }
                 })
