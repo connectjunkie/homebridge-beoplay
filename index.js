@@ -234,6 +234,11 @@ BeoplayAccessory.prototype = {
                     apiID: source[1].id
                 }
                 this.inputs.push(entry);
+
+                // if this is a TV, ensure that we are using the input method of powering on 
+                if (source[1].sourceType.type=="TV" && this.on=="on") {
+                    this.on = 'input';
+                }
             });
         }
 
