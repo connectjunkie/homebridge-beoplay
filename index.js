@@ -35,6 +35,7 @@ function BeoplayAccessory(log, config) {
 
     // Default to the Max volume in case this is not obtained before the volume is set the first time
     this.maxVolume = 90;
+    this.currentVolume = 0;
     this.volume = {};
     this.mute = {};
     this.power = {};
@@ -96,7 +97,7 @@ BeoplayAccessory.prototype = {
 
         this.prepareInformationService();
 
-        if (!this.inputs.length && this.on=='input') {
+        if (!this.inputs.length && this.on == 'input') {
             // if no users supplied or parsed inputs and the user wants to power on this way
             this.parseInputs();
         }
@@ -204,9 +205,8 @@ BeoplayAccessory.prototype = {
 
         tvSpeakerService
             .getCharacteristic(Characteristic.VolumeSelector)
-            .on("set", (newValue, callback) => {
-                this.tv.setVolume(newValue);
-                callback(null, newValue);
+            .on("set", (state, callback) => {
+                this.setVolumeSwitch(state, callback, !state);
             });
 
         tvSpeakerService
@@ -432,6 +432,7 @@ BeoplayAccessory.prototype = {
             const volume = parseInt(response.body.volume.speaker.level);
             this.log("Volume is at %s %", volume);
 
+            this.currentVolume = volume;
             this.maxVolume = parseInt(response.body.volume.speaker.range.maximum);
             this.log("Maximum volume is set to %s %", this.maxVolume);
             callback(null, volume);
@@ -454,8 +455,24 @@ BeoplayAccessory.prototype = {
             callback(new Error("setVolume() failed"));
         } else {
             this.log("Volume set to %s", volume);
+            this.currentVolume = volume;
             callback(undefined, response.body);
         }
+    },
+
+    setVolumeSwitch: async function (state, callback, isUp) {
+        this.log('Volume %s pressed, current volume: %s, limit: %s', isUp ? 'Up' : 'Down', this.currentVolume, this.maxVolume);
+        let volLevel = this.currentVolume;
+        if (isUp) {
+            if (volLevel < this.maxVolume) {
+                this.setVolume(this.currentVolume + 1, callback);
+            }
+        } else {
+            if (volLevel > 0) {
+                this.setVolume(this.currentVolume - 1, callback);
+            }
+        }
+        callback(null);
     },
 
     getInput: async function (callback) {
