@@ -1,6 +1,6 @@
 # Bang & Olufsen/Beoplay accessory
 
-This accessory allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Beoplay A9 mk2 speaker and Beoplay V1 TV, so reports of success or issues with other Beoplay B&O devices are welcome.
+This accessory allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Beoplay A9 mk2 speaker (although will hopefully work on a Beoplay V1 TV), so reports of success or issues with other Beoplay B&O devices are welcome.
 
 Depending on which integration option is selected (speaker, bulb or TV) will depend on which features can be controlled - speaker and bulb integrations support volume and either mute or standby/enable, while the TV integration also allows selection of active input. Note that the plugin honours the B&O speaker's "maximum volume" setting, so trying to set the volume to higher than this will set the volume to the maximum, which may not be reflected in your HomeKit app until you refresh.
 
