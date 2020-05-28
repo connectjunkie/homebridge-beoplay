@@ -222,6 +222,8 @@ BeoplayAccessory.prototype = {
         tvService.addLinkedService(tvSpeakerService);
         this.services.push(tvSpeakerService);
 
+        this.currentVolume = await this.getVolume();
+
         // Configure TV inputs
 
         if (!this.inputs.length) {
@@ -427,7 +429,9 @@ BeoplayAccessory.prototype = {
 
         if (!response) {
             this.log("getVolume() request failed");
-            callback(new Error("getVolume() failed"));
+            if (callback) {
+                callback(new Error("getVolume() failed"));
+            }
         } else {
             const volume = parseInt(response.body.volume.speaker.level);
             this.log("Volume is at %s %", volume);
@@ -435,7 +439,10 @@ BeoplayAccessory.prototype = {
             this.currentVolume = volume;
             this.maxVolume = parseInt(response.body.volume.speaker.range.maximum);
             this.log("Maximum volume is set to %s %", this.maxVolume);
-            callback(null, volume);
+            if (callback) {
+                callback(null, volume);
+            }
+            return volume;
         }
     },
 
@@ -452,11 +459,15 @@ BeoplayAccessory.prototype = {
 
         if (!response) {
             this.log("setVolume() request failed");
-            callback(new Error("setVolume() failed"));
+            if (callback) {
+                callback(new Error("setVolume() failed"));
+            }
         } else {
             this.log("Volume set to %s", volume);
             this.currentVolume = volume;
-            callback(undefined, response.body);
+            if (callback) {
+                callback(undefined, response.body);
+            }
         }
     },
 
@@ -465,11 +476,11 @@ BeoplayAccessory.prototype = {
         let volLevel = this.currentVolume;
         if (isUp) {
             if (volLevel < this.maxVolume) {
-                this.setVolume(this.currentVolume + 1, callback);
+                this.setVolume(this.currentVolume + 1);
             }
         } else {
             if (volLevel > 0) {
-                this.setVolume(this.currentVolume - 1, callback);
+                this.setVolume(this.currentVolume - 1);
             }
         }
         callback(null);
