@@ -222,7 +222,7 @@ BeoplayAccessory.prototype = {
         tvService.addLinkedService(tvSpeakerService);
         this.services.push(tvSpeakerService);
 
-        this.currentVolume = await this.getVolume();
+        this.getVolume();
 
         // Configure TV inputs
 
@@ -442,7 +442,6 @@ BeoplayAccessory.prototype = {
             if (callback) {
                 callback(null, volume);
             }
-            return volume;
         }
     },
 
