@@ -215,7 +215,7 @@ BeoplayAccessory.prototype = {
             .on("set", this.setMuteState.bind(this));
 
         tvSpeakerService
-            .getCharacteristic(Characteristic.Volume)
+            .addCharacteristic(Characteristic.Volume)
             .on("get", this.getVolume.bind(this))
             .on("set", this.setVolume.bind(this));
 
