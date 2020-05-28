@@ -96,6 +96,11 @@ BeoplayAccessory.prototype = {
 
         this.prepareInformationService();
 
+        if (!this.inputs.length && this.on=='input') {
+            // if no users supplied or parsed inputs and the user wants to power on this way
+            this.parseInputs();
+        }
+
         return this.services;
     },
 
@@ -186,6 +191,8 @@ BeoplayAccessory.prototype = {
             .getCharacteristic(Characteristic.RemoteKey)
             .on("set", this.remoteControl.bind(this));
 
+        this.services.push(tvService);
+
         // Configuring Volume control
         this.log("Creating tv speaker");
 
@@ -219,28 +226,7 @@ BeoplayAccessory.prototype = {
 
         if (!this.inputs.length) {
             // if the user hasn't supplied their own inputs
-            // ugly synchronous call to device info. Need to figure out a better way of doing this
-            var response;
-
-            try {
-                response = JSON.parse(syncrequest('GET', this.sourceUrl).getBody());
-            } catch {
-                this.log("Reading source input info failed");
-            }
-
-            response.sources.forEach((source) => {
-                let entry = {
-                    name: source[1].friendlyName,
-                    type: this.mapType(source[1].sourceType.type),
-                    apiID: source[1].id
-                }
-                this.inputs.push(entry);
-
-                // if this is a TV, ensure that we are using the input method of powering on 
-                if (source[1].sourceType.type == "TV" && this.on == "on") {
-                    this.on = 'input';
-                }
-            });
+            this.parseInputs();
         }
 
         let configuredInputs = this.setupInputs();
@@ -248,8 +234,6 @@ BeoplayAccessory.prototype = {
             tvService.addLinkedService(input);
             this.services.push(input);
         });
-
-        this.services.push(tvService);
     },
 
     mapType: function (type) {
@@ -271,6 +255,31 @@ BeoplayAccessory.prototype = {
             default:
                 return "OTHER";
         }
+    },
+
+    parseInputs: function () {
+        // ugly synchronous call to device info. Need to figure out a better way of doing this
+        var response;
+
+        try {
+            response = JSON.parse(syncrequest('GET', this.sourceUrl).getBody());
+        } catch {
+            this.log("Reading source input info failed");
+        }
+
+        response.sources.forEach((source) => {
+            let entry = {
+                name: source[1].friendlyName,
+                type: this.mapType(source[1].sourceType.type),
+                apiID: source[1].id
+            }
+            this.inputs.push(entry);
+
+            // if this is a TV, ensure that we are using the input method of powering on 
+            if (source[1].sourceType.type == "TV" && this.on == "on") {
+                this.on = 'input';
+            }
+        });
     },
 
     setupInputs: function () {
