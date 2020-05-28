@@ -167,7 +167,7 @@ BeoplayAccessory.prototype = {
         this.services.push(bulbService);
     },
 
-    prepareTvService: function () {
+    prepareTvService: async function () {
         this.log("Creating tv");
 
         // Configure TV Accessory
