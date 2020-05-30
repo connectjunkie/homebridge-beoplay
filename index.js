@@ -503,7 +503,11 @@ BeoplayAccessory.prototype = {
       const index = this.inputs.findIndex(function (x) {
         return x.apiID === input
       })
-      callback(null, index + 1)
+      if (index === -1) { // the current input wasn't found. User hasn't defined?
+        callback(null, 1)
+      } else {
+        callback(null, index + 1)
+      }
     }
   },
 
