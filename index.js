@@ -112,7 +112,7 @@ BeoplayAccessory.prototype = {
       .setCharacteristic(Characteristic.Manufacturer, 'Bang & Olufsen')
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serialNumber)
-      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.0')
+      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.1')
 
     this.services.push(informationService)
   },
@@ -361,7 +361,7 @@ BeoplayAccessory.prototype = {
       this.log('setMuteState() failed')
       callback(new Error('setMuteState() failed'))
     } else {
-      this.log('Mute state set to %s', muted ? 'ON' : 'OFF')
+      this.log('Mute state set to %s', muted ? 'NOT MUTED' : 'MUTED')
       callback(undefined, response.body)
     }
   },

@@ -2,7 +2,7 @@
   "name": "homebridge-beoplay",
   "version": "0.2.0",
   "license": "Apache-2.0",
-  "description": "Homebridge plugin to control a Bang and Olufsen (Beoplay) TV or Speaker",
+  "description": "Homebridge plugin to control a Bang and Olufsen (Beoplay) devices, such as Speakers and TVs",
   "keywords": [
     "homebridge-plugin",
     "beoplay"
