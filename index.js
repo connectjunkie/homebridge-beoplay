@@ -361,7 +361,7 @@ BeoplayAccessory.prototype = {
       this.log('setMuteState() failed')
       callback(new Error('setMuteState() failed'))
     } else {
-      this.log('Mute state set to %s', muted ? 'NOT MUTED' : 'MUTED')
+      this.log('Mute state set to %s', muteBody.muted ? 'MUTED' : 'NOT MUTED')
       callback(undefined, response.body)
     }
   },
