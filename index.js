@@ -113,7 +113,7 @@ BeoplayAccessory.prototype = {
       .setCharacteristic(Characteristic.Manufacturer, 'Bang & Olufsen')
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serialNumber)
-      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.1')
+      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.2')
 
     this.services.push(informationService)
   },
