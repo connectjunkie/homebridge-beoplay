@@ -36,6 +36,7 @@ function BeoplayAccessory (log, config) {
   // Default to the Max volume in case this is not obtained before the volume is set the first time
   this.maxVolume = 90
   this.currentVolume = 0
+  this.currentPowerState = false
   this.volume = {}
   this.mute = {}
   this.power = {}
@@ -382,44 +383,55 @@ BeoplayAccessory.prototype = {
       } else {
         state = false
       }
+      this.currentPowerState = state
 
-      if (this.type === 'speaker') {
-        // return the power state reversed
-        callback(null, !state)
-      } else {
-        // return correctly
-        callback(null, state)
+      if (callback) {
+        if (this.type === 'speaker') {
+          // return the power state reversed
+          callback(null, !state)
+        } else {
+          // return correctly
+          callback(null, state)
+        }
       }
     }
   },
 
   setPowerState: async function (power, callback) {
-    // If this is a TV and we're turning it on, we turn on by setting an input
-    if (this.on === 'input' && power === true) {
-      this.setInput(this.default, callback)
-    } else { // If not use the API
-      var powerBody = {
-        standby: {
-          powerState: power ? 'on' : 'standby'
+    // Check if the device is already on
+    await this.getPowerState()
+    if (this.currentPowerState) {
+      // TV is already on - return
+      callback(null)
+    } else {
+      // If this is a TV, we turn on by setting an input
+      if (this.on === 'input' && power === 1) {
+        this.log('Powering on via setting input %d', this.default)
+        this.setInput(this.default, callback)
+      } else { // If not use the API
+        var powerBody = {
+          standby: {
+            powerState: power ? 'on' : 'standby'
+          }
         }
-      }
 
-      if (this.type === 'speaker') {
-        // if a speaker, we need to invert the state we are setting
-        powerBody.standby.powerState = !power ? 'on' : 'standby'
-      }
-
-      const response = await this._httpRequest(this.power.setUrl, powerBody, 'PUT')
-      if (!response) {
-        this.log('setPowerState() request failed')
-        callback(new Error('setPowerState() failed'))
-      } else {
         if (this.type === 'speaker') {
-          this.log('Power state set to %s', !power ? 'ON' : 'STANDBY')
-        } else {
-          this.log('Power state set to %s', power ? 'ON' : 'STANDBY')
+          // if a speaker, we need to invert the state we are setting
+          powerBody.standby.powerState = !power ? 'on' : 'standby'
         }
-        callback(undefined, response.body)
+
+        const response = await this._httpRequest(this.power.setUrl, powerBody, 'PUT')
+        if (!response) {
+          this.log('setPowerState() request failed')
+          callback(new Error('setPowerState() failed'))
+        } else {
+          if (this.type === 'speaker') {
+            this.log('Power state set to %s', !power ? 'ON' : 'STANDBY')
+          } else {
+            this.log('Power state set to %s', power ? 'ON' : 'STANDBY')
+          }
+          callback(undefined, response.body)
+        }
       }
     }
   },
