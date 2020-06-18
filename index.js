@@ -375,7 +375,7 @@ BeoplayAccessory.prototype = {
       callback(new Error('getMuteState() failed'))
     } else {
       const power = response.body.profile.powerManagement.standby.powerState
-      this.log('Speaker is currently %s', power)
+      this.log('Device is currently %s', power)
 
       var state
       if (power === 'on') {
@@ -400,7 +400,7 @@ BeoplayAccessory.prototype = {
   setPowerState: async function (power, callback) {
     // Check if the device is already on
     await this.getPowerState()
-    if (this.currentPowerState) {
+    if (this.currentPowerState && power === 1) {
       // TV is already on - return
       callback(null)
     } else {
