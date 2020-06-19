@@ -26,7 +26,7 @@ function BeoplayAccessory (log, config) {
   }
   this.ip = config.ip
   this.type = config.type || 'speaker'
-  this.mode = config.mode || 'mute'
+  this.mode = config.mode || ((this.type === 'tv') ? 'power' : 'mute')
   this.on = config.on || ((this.type === 'tv') ? 'input' : 'on')
   this.default = config.default || 1
   this.inputs = config.inputs || []
@@ -113,7 +113,7 @@ BeoplayAccessory.prototype = {
       .setCharacteristic(Characteristic.Manufacturer, 'Bang & Olufsen')
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serialNumber)
-      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.2')
+      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.4')
 
     this.services.push(informationService)
   },
@@ -178,10 +178,17 @@ BeoplayAccessory.prototype = {
       .setCharacteristic(Characteristic.ConfiguredName, this.name)
       .setCharacteristic(Characteristic.SleepDiscoveryMode, Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE)
 
-    tvService
-      .getCharacteristic(Characteristic.Active)
-      .on('get', this.getPowerState.bind(this))
-      .on('set', this.setPowerState.bind(this))
+    if (this.mode === 'mute') { // we will mute the TV instead of turning off
+      tvService
+        .getCharacteristic(Characteristic.Active)
+        .on('get', this.getMuteState.bind(this))
+        .on('set', this.setMuteState.bind(this))
+    } else { // default for TV - power on/off
+      tvService
+        .getCharacteristic(Characteristic.Active)
+        .on('get', this.getPowerState.bind(this))
+        .on('set', this.setPowerState.bind(this))
+    }
 
     tvService
       .getCharacteristic(Characteristic.ActiveIdentifier)
