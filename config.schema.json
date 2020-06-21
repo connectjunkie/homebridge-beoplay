@@ -31,6 +31,10 @@
             "enum": ["bulb"]
           },
           {
+            "title": "Fan",
+            "enum": ["fan"]
+          },
+          {
             "title": "TV",
             "enum": ["tv"]
           }
@@ -42,7 +46,7 @@
         "type": "string",
         "default": "mute",
         "oneOf": [{
-            "title": "Mute Speaker",
+            "title": "Mute Device",
             "enum": ["mute"]
           },
           {

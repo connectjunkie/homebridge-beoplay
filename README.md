@@ -58,7 +58,7 @@ Note that the TV device support, the remote control support within the Control C
 
 ## Mode parameter
 
-The plugin will mute a speaker or bulb by default. By setting "mode" to "power" the plugin will instead put the speaker into standby mode instead of muting. This may be preferable, depending on what speaker/bulb behaviour you are looking for.
+The plugin will mute a speaker, fan or bulb by default. By setting "mode" to "power" the plugin will instead put the device into standby mode instead of muting. This may be preferable, depending on what  behaviour you are looking for.
 
 ## Inputs parameter
 
