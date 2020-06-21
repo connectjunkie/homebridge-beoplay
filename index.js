@@ -165,7 +165,7 @@ BeoplayAccessory.prototype = {
 
     // bind brightness setting to volume
     bulbService
-      .addCharacteristic(new Characteristic.Brightness())
+      .getCharacteristic(Characteristic.Brightness)
       .on('get', this.getVolume.bind(this))
       .on('set', this.setVolume.bind(this))
 
