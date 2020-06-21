@@ -102,7 +102,7 @@ BeoplayAccessory.prototype = {
 
     this.prepareInformationService()
 
-    if (!this.inputs.length && this.on === 'input') {
+    if ((!this.inputs.length) && this.on === 'input') {
       // if no user supplied or parsed inputs and the user wants to power on this way
       this.parseInputs()
     }
@@ -299,6 +299,7 @@ BeoplayAccessory.prototype = {
   parseInputs: function () {
     // ugly synchronous call to device info. Need to figure out a better way of doing this
     var response
+    var counter = 1
 
     try {
       response = JSON.parse(syncrequest('GET', this.sourceUrl).getBody())
@@ -313,11 +314,13 @@ BeoplayAccessory.prototype = {
         apiID: source[1].id
       }
       this.inputs.push(entry)
+      this.log('Adding input ' + counter + ', Name: ' + entry.name + ', Type: ' + entry.type)
 
       // if this is a TV, ensure that we are using the input method of powering on
       if (source[1].sourceType.type === 'TV' && this.on === 'on') {
         this.on = 'input'
       }
+      counter = counter + 1
     })
   },
 
@@ -328,7 +331,6 @@ BeoplayAccessory.prototype = {
     this.inputs.forEach((input) => {
       const name = input.name
       const type = this.determineInputType(input.type)
-      this.log('Adding input ' + counter + ': Name: ' + name + ', Type: ' + input.type)
 
       configuredInputs.push(this.createInputSource(name, counter, type))
       counter = counter + 1
@@ -436,12 +438,12 @@ BeoplayAccessory.prototype = {
   setPowerState: async function (power, callback) {
     // Check if the device is already on
     await this.getPowerState()
-    if (this.currentPowerState && power === 1) {
-      // TV is already on - return
+    if (this.currentPowerState && (power === 1 || power === true)) {
+      // Device is already on - return
       callback(null)
     } else {
-      // If this is a TV, we turn on by setting an input
-      if (this.on === 'input' && power === 1) {
+      // If selected, we turn on by setting an input
+      if (this.on === 'input' && (power === 1 || power === true)) {
         this.log('Powering on via setting input %d', this.default)
         this.setInput(this.default, callback)
       } else { // If not use the API
