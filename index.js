@@ -91,6 +91,8 @@ BeoplayAccessory.prototype = {
       this.prepareBulbService()
     } else if (this.type === 'tv') {
       this.prepareTvService()
+    } else if (this.type === 'fan') {
+      this.prepareFanService()
     } else {
       this.log("Incorrect value for 'type' specified")
       return
@@ -113,7 +115,7 @@ BeoplayAccessory.prototype = {
       .setCharacteristic(Characteristic.Manufacturer, 'Bang & Olufsen')
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serialNumber)
-      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.4')
+      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.5')
 
     this.services.push(informationService)
   },
@@ -166,6 +168,31 @@ BeoplayAccessory.prototype = {
       .on('set', this.setVolume.bind(this))
 
     this.services.push(bulbService)
+  },
+
+  prepareFanService: function () {
+    this.log('Creating fan')
+    const fanService = new Service.Fan(this.name)
+
+    if (this.mode === 'mute') { // we will mute the device when turned off
+      fanService
+        .getCharacteristic(Characteristic.On)
+        .on('get', this.getMuteState.bind(this))
+        .on('set', this.setMuteState.bind(this))
+    } else { // we will put device in standby when turned off
+      fanService
+        .getCharacteristic(Characteristic.On)
+        .on('get', this.getPowerState.bind(this))
+        .on('set', this.setPowerState.bind(this))
+    }
+
+    // bind rotation speed setting to volume
+    fanService
+      .getCharacteristic(Characteristic.RotationSpeed)
+      .on('get', this.getVolume.bind(this))
+      .on('set', this.setVolume.bind(this))
+
+    this.services.push(fanService)
   },
 
   prepareTvService: async function () {

@@ -2,7 +2,9 @@
 
 This accessory allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Beoplay A9 mk2 speaker (although will hopefully work on a Beoplay V1 TV), so reports of success or issues with other Beoplay B&O devices are welcome.
 
-Depending on which integration option is selected (speaker, bulb or TV) will depend on which features can be controlled - speaker and bulb integrations support volume and either mute or standby/enable, while the TV integration also allows selection of the active input. Note that the plugin honours the B&O speaker's "maximum volume" setting, so trying to set the volume to higher than this will set the volume to the maximum, which may not be reflected in your HomeKit app until you refresh.
+Due to the limitations of speaker and TV support in HomeKit, devices can be represented in HomeKit as a number of different devices - including as a TV, speakers, lightbulb, or fan. Which device you choose will determine which features can be controlled in what way (please see below). 
+
+Note that the plugin honours the B&O speaker's "maximum volume" setting, so trying to set the volume to higher than this will set the volume to the maximum, which may not be reflected in your HomeKit app until you refresh.
 
 # Installation
 
@@ -31,8 +33,8 @@ Only the name and ip options are required, however there are a number of optiona
 
 Option | Default | Explanation
 --- | --- | ---
-`type` | `speaker` | What device type to present to HomeKit to represent the BeoPlay device. Values can be "speaker", "bulb", or "tv". All have advantages and disadvantages - please see the notes below
-`mode` | `power` if type is `tv`, otherwise `mute` | What behaviour to perform when the device is muted (speaker) or turned off (bulb and TV). Values can be "mute" or "power" - please see the notes below
+`type` | `speaker` | What device type to present to HomeKit to represent the BeoPlay device. Values can be "speaker", "bulb", "fan", or "tv". All have advantages and disadvantages - please see the notes below
+`mode` | `power` if type is `tv`, otherwise `mute` | What behaviour to perform when the device is muted (speaker) or turned off (bulb, fan and TV). Values can be "mute" or "power" - please see the notes below
 `on` | `input` if type is `tv`, otherwise `on` | Define whether to power on the device from standby using the API (available for speakers) or via setting an input (available for both speakers and TVs)
 `default` | `1` | The input number selected to power on the device when coming out of standby
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format.
@@ -41,13 +43,18 @@ Option | Default | Explanation
 
 ## Type parameter
 
-The speaker support in HomeKit is limited - only the Mute functionality is supported on a Speaker by default and the  iOS Home app (as of iOS 13) does not support speakers at all. Third party HomeKit apps may support speakers and may work for setting volume as well (for example - the [Elgato Eve app](https://apps.apple.com/gb/app/eve-for-homekit/id917695792) works) however you will not be able to fully control the speaker with Siri.
+Note that any of the types can be used regardless of whether the B&O device is actually a TV or a speaker, however functionality and how the device can be controlled will differ as show below. Note that for on/off control this could be used for putting the device in standby mode and waking it up, or for muting and unmuting the device, depending on how you have set the "mode" setting (see below).
 
-For this reason this plugin also supports exposing the speaker as a Lightbulb by setting "type" to "bulb" in your config.json. This will allow the Speaker to be muted/unmuted using Siri and the Home app, and allow the volume to be set as well. This will have some side effects though - Siri will mute the speaker if you say "Turn off the lights" and will change the volume if you say "Dim the lights to 20%". 
+Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
+--- | --- | --- | --- | ---
+`tv` | on/off and change input. Volume up/down via hardware buttons in Control Centre remote app | on/off | Not supported
+`speaker` | Not supported | Not supported | May be supported (works in Eve, Home+)
+`bulb` | on/off and volume | on/off and volume | on/off and volume
+`fan` | on/off and volume | on/off and volume | on/off and volume
 
-The television suppport introduced with iOS 12.2 is also supported for exposing the device (regardless of whether the device is actually a TV). This support is currently incomplete, however you will be able to turn the device on/off and select the active input in the Apple Home app, and increase and decrease the volume with your device hardware volume buttons in the Control Centre remote (note, this is not the Apple Remote app from the App Store). The other functionality of the Control Centre remote (for media control etc) is not currently implemented.
+Note that for the `bulb` option, Siri will include the B&O device within commands that effect all lighting, so Siri will turn the speaker off if you say "Turn off the lights" and will change the volume if you say "Dim the lights to 20%". 
 
-There is also a limitation in that only one TV can be exposed via Homebridge as an accessory at a time. This may mean that you won't be able to use this integration type if you already have another Homebridge TV plugin installed, or with multiple Beoplay devices - unless you have multiple instances of Homebridge running. Also - be aware that TVs are currently only visible in the Apple Home app, so you will not be able to interact with them in a third party HomeKit application.
+Note that the TV device support, the remote control support within the Control Centre remote (for media control etc) is not currently implemented. There is also a limitation in that only one TV can be exposed via Homebridge as an accessory at a time. This may mean that you won't be able to use this integration type if you already have another Homebridge TV plugin installed, or with multiple Beoplay devices - unless you have multiple instances of Homebridge running. 
 
 ## Mode parameter
 
