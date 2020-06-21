@@ -46,7 +46,7 @@ Option | Default | Explanation
 Note that any of the types can be used regardless of whether the B&O device is actually a TV or a speaker, however functionality and how the device can be controlled will differ as show below. Note that for on/off control this could be used for putting the device in standby mode and waking it up, or for muting and unmuting the device, depending on how you have set the "mode" setting (see below).
 
 Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
---- | --- | --- | --- | ---
+--- | --- | --- | ---
 `tv` | on/off and change input. Volume up/down via hardware buttons in Control Centre remote app | on/off | Not supported
 `speaker` | Not supported | Not supported | May be supported (works in Eve, Home+)
 `bulb` | on/off and volume | on/off and volume | on/off and volume
