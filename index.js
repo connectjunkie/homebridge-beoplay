@@ -103,7 +103,7 @@ BeoplayAccessory.prototype = {
     this.prepareInformationService()
 
     if (!this.inputs.length && this.on === 'input') {
-      // if no users supplied or parsed inputs and the user wants to power on this way
+      // if no user supplied or parsed inputs and the user wants to power on this way
       this.parseInputs()
     }
 
