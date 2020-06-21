@@ -82,7 +82,9 @@ BeoplayAccessory.prototype = {
       this.serialNumber = response.beoDevice.productId.serialNumber
       this.jid = res.headers['device-jid']
     } catch {
-      this.log('Reading device info failed')
+      // can't parse the device info - fail gracefully
+      this.log('Reading device info failed. Have you supplied the correct IP address?')
+      return
     }
 
     if (this.type === 'speaker') {
