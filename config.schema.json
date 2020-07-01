@@ -78,9 +78,9 @@
         "required": false
       },
       "inputs": {
+        "title": "Inputs to be configured",
         "type": "array",
         "items": {
-          "title": "Inputs to be configured",
           "type": "object",
           "properties": {
             "name": {
@@ -121,11 +121,21 @@
               "type": "string",
               "default": "radio:1111.222222.33333333@products.bang-olufsen.com",
               "required": true,
-              "description": "API id values can be looked up from your device using a browser at the URL path hxxp://x.x.x.x/BeoZone/Zone/ActiveSources/"
+              "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
             }
           },
           "required": false
         }
+      },
+      "exclude": {
+        "title": "Inputs to exclude for automatic setup",
+        "type": "array",
+        "items": {
+          "title": "API id value",
+          "type": "string",
+          "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
+        },
+        "required": false
       }
     }
   }
