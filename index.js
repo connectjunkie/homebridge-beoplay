@@ -342,7 +342,7 @@ BeoplayAccessory.prototype = {
         const type = this.determineInputType(input.type)
 
         configuredInputs.push(this.createInputSource(name, counter, type))
-        this.log('Added input ' + counter + ', Name: ' + name + ', Type: ' + type)
+        this.log('Added input ' + counter + ', Name: ' + name)
         counter = counter + 1
       }
     })
