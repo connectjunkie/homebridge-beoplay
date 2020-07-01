@@ -18,7 +18,7 @@ function BeoplayAccessory (log, config) {
   this.log = log
   this.services = []
 
-  this.name = config.name || 'B&O Speaker'
+  this.name = config.name || 'B&O Device'
 
   if (!isip(config.ip)) {
     this.log('Invalid IP address supplied')
@@ -30,8 +30,14 @@ function BeoplayAccessory (log, config) {
   this.on = config.on || ((this.type === 'tv') ? 'input' : 'on')
   this.default = config.default || 1
   this.inputs = config.inputs || []
+  this.exclude = config.exclude || []
   this.debug = config.debug || false
   this.debugproxy = config.debugproxy
+
+  if (this.inputs.length && this.exclude.length) {
+    // user has supplied both an inputs values and an exclude value. Ignore the excludes value
+    this.exclude = []
+  }
 
   // Default to the Max volume in case this is not obtained before the volume is set the first time
   this.maxVolume = 90
@@ -314,7 +320,6 @@ BeoplayAccessory.prototype = {
         apiID: source[1].id
       }
       this.inputs.push(entry)
-      this.log('Adding input ' + counter + ', Name: ' + entry.name + ', Type: ' + entry.type)
 
       // if this is a TV, ensure that we are using the input method of powering on
       if (source[1].sourceType.type === 'TV' && this.on === 'on') {
@@ -329,11 +334,17 @@ BeoplayAccessory.prototype = {
     var counter = 1
 
     this.inputs.forEach((input) => {
-      const name = input.name
-      const type = this.determineInputType(input.type)
+      if (this.exclude.includes(input.apiID)) {
+        // this entry is on the exclude list
+        this.log('Excluded input: ' + input.name)
+      } else {
+        const name = input.name
+        const type = this.determineInputType(input.type)
 
-      configuredInputs.push(this.createInputSource(name, counter, type))
-      counter = counter + 1
+        configuredInputs.push(this.createInputSource(name, counter, type))
+        this.log('Added input ' + counter + ', Name: ' + name + ', Type: ' + type)
+        counter = counter + 1
+      }
     })
     return configuredInputs
   },

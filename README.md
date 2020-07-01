@@ -37,7 +37,8 @@ Option | Default | Explanation
 `mode` | `power` if type is `tv`, otherwise `mute` | What behaviour to perform when the device is muted (speaker) or turned off (bulb, fan and TV). Values can be "mute" or "power" - please see the notes below
 `on` | `input` if type is `tv`, otherwise `on` | Define whether to power on the device from standby using the API (available for speakers) or via setting an input (available for both speakers and TVs)
 `default` | `1` | The input number selected to power on the device when coming out of standby
-`inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format.
+`inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
+`exclude` | `undefined` | If you don't supply inputs manually (via `inputs` above) these will be parsed automatically from the device. The `exclude` option allows you to exclude specific inputs from being automatically setup - for example, on a speaker its unlikely you use all of the supported music services, and on a TV you may not use all of the available inputs. See below for the format.
 
 # Notes
 
@@ -79,7 +80,20 @@ Inputs for the TV integation type are defined as follows:
 The values are as follows:
 - `name`: Name for the input in the interface
 - `type`: Can be one of `TV`, `HDMI`, `APPLICATION`, `AIRPLAY`, or `OTHER`
-- `apiID`: This is the `id` value for the input in the Beoplay API. This can be found by browsing to the following URL path on your device: hxxp://x.x.x.x/BeoZone/Zone/ActiveSources/ 
+- `apiID`: This is the `id` value for the input in the Beoplay API. This can be found by browsing to the following URL path on your device: http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/ 
+
+## Exclude parameter
+
+Note that you can either supply an `inputs` value or an `exclude` value - if you supply both the `exclude` option will be ignored.
+
+Exclude options for the TV integration type are defined as follows:
+
+    "exclude": [
+      "radio:1111.222222.33333333@products.bang-olufsen.com",
+      "bluetooth:1111.2222222.33333333@products.bang-olufsen.com"
+    ]
+
+The values to supply are the `id` value for the input in the Beoplay API. As per for the `inputs` values, the inputs supported by your device can be found by browsing to the following URL path on your device: http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/ 
 
 # Credits
 This plugin started life as a fork of the [homebridge-http-speaker](https://github.com/Supereg/homebridge-http-speaker) plugin by Supereg
