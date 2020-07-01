@@ -348,7 +348,7 @@ BeoplayAccessory.prototype = {
     })
     // sense check the default input selected before we return
     if (this.default > counter) {
-      this.default = counter
+      this.default = counter - 1
       this.log('Default input out of range. Changed to input ' + counter)
     }
 
