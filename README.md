@@ -15,6 +15,10 @@ Homebridge is published through [NPM](https://www.npmjs.com/package/homebridge) 
 
 If you don't have Homebridge installed, [check the repository](https://github.com/nfarina/homebridge) for detailed setup instructions.
 
+# Community
+
+Note there is now a `beoplay` group on the Homebridge community on [Discord](https://discord.gg/RcV7fa8) for any usage and setup queries and/or bug reports.
+
 # Configuration
 
 The plugin is configured as part of your Homebridge `config.json` file.
