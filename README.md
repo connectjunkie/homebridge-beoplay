@@ -17,7 +17,7 @@ If you don't have Homebridge installed, [check the repository](https://github.co
 
 # Community
 
-Note there is now a `beoplay` group on the Homebridge community on [Discord](https://discord.gg/RcV7fa8) for any usage and setup queries and/or bug reports.
+Note there is now a `beoplay` group on the Homebridge community on [Discord](https://discord.gg/Z8jmyvb) for any usage and setup queries and/or bug reports.
 
 # Configuration
 
