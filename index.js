@@ -123,7 +123,7 @@ BeoplayAccessory.prototype = {
       .setCharacteristic(Characteristic.Manufacturer, 'Bang & Olufsen')
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serialNumber)
-      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.8')
+      .setCharacteristic(Characteristic.FirmwareRevision, '0.2.9')
 
     this.services.push(informationService)
   },
@@ -332,11 +332,13 @@ BeoplayAccessory.prototype = {
   setupInputs: function () {
     var configuredInputs = []
     var counter = 1
+    var excluded = []
 
     this.inputs.forEach((input) => {
       if (this.exclude.includes(input.apiID)) {
         // this entry is on the exclude list
         this.log('Excluded input: ' + input.name)
+        excluded.push(input)
       } else {
         const name = input.name
         const type = this.determineInputType(input.type)
@@ -351,6 +353,15 @@ BeoplayAccessory.prototype = {
       this.default = counter - 1
       this.log('Default input out of range. Changed to input ' + this.default)
     }
+
+    // remove excluded inputs from the list of inputs
+    excluded.forEach((input) => {
+      for (var i = 0; i < this.inputs.length; i++) {
+        if (this.inputs[i] === input) {
+          this.inputs.splice(i, 1)
+        }
+      }
+    })
 
     return configuredInputs
   },
@@ -379,6 +390,16 @@ BeoplayAccessory.prototype = {
       default:
         return Characteristic.InputSourceType.OTHER
     }
+  },
+
+  lookupInput: function (lookup) {
+    var match = ''
+    this.inputs.forEach((input) => {
+      if (input.apiID === lookup) {
+        match = input.name
+      }
+    })
+    return match
   },
 
   getMuteState: async function (callback) {
@@ -562,7 +583,7 @@ BeoplayAccessory.prototype = {
       const input = response.body.activeSources.primary
 
       if (input) {
-        this.log('Active input is %s', input)
+        this.log('Active input is %s', this.lookupInput(input))
       } else {
         this.log('No active input currently set')
       }
