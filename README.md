@@ -1,6 +1,6 @@
-# Bang & Olufsen/Beoplay accessory
+# Homebridge plugin for Bang & Olufsen/Beoplay devices
 
-This accessory allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Beoplay A9 mk2 speaker (although will hopefully work on a Beoplay V1 TV), so reports of success or issues with other Beoplay B&O devices are welcome.
+This plugin allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).  Currently this has only been tested on a Beoplay A9 mk2 speaker (although will hopefully work on a Beoplay V1 TV), so reports of success or issues with other Beoplay B&O devices are welcome.
 
 Due to the limitations of speaker and TV support in HomeKit, devices can be represented in HomeKit as a number of different devices - including as a TV, speaker, lightbulb, or fan. Which device you choose will determine which features can be controlled in what way (please see below). 
 
@@ -17,7 +17,7 @@ If you don't have Homebridge installed, [check the repository](https://github.co
 
 # Community
 
-Note there is now a `beoplay` group on the Homebridge community on [Discord](https://discord.gg/Z8jmyvb) for any usage and setup queries and/or bug reports.
+Note there is now a `#beoplay` group on the Homebridge community on [Discord](https://discord.gg/Z8jmyvb) for any usage and setup queries and/or bug reports.
 
 # Configuration
 
@@ -25,11 +25,19 @@ The plugin is configured as part of your Homebridge `config.json` file.
 
 ## Example addition to existing config.json:
 
-      "accessories": [
+      "platforms": [
         {
-          "accessory": "Beoplay",
-          "name": "Bedroom Speakers",
-          "ip": "192.168.x.x"
+          "platform": "Beoplay",
+          "devices": [
+            {
+              "name": "Bedroom Speakers",
+              "ip": "192.168.x.x"
+            },
+            {
+              "name": "Living Room TV",
+              "ip": "192.168.x.x"
+            }
+          ]
         }
       ]
 
@@ -43,6 +51,12 @@ Option | Default | Explanation
 `default` | `1` | The input number selected to power on the device when coming out of standby
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
 `exclude` | `undefined` | If you don't supply inputs manually (via `inputs` above) these will be parsed automatically from the device. The `exclude` option allows you to exclude specific inputs from being automatically setup - for example, on a speaker its unlikely you use all of the supported music services, and on a TV you may not use all of the available inputs. See below for the format.
+
+## Migration from plugin version 0.x.x to 1.x.x
+
+This plugin has transitioned from being an Accessory plugin to a Platform plugin. While backward compatibility has been retained for now, you should migrate to the new platform configuration in your config.json if you plan to use the TV integration at all - especially with multiple devices using this integration or with iOS 14.
+
+Note that the primary difference between the Accessory plugin setup and Platform plugin setup is that TVs are exposed differently to the Home app. On migration you will need to add each device using the TV integration as an external device in the Home app (it will not be added automatically) as per the guidance below. 
 
 # Notes
 
@@ -109,3 +123,5 @@ This plugin started life as a fork of the [homebridge-http-speaker](https://gith
 Inspiration for the Lightbulb implementation is derived from a [fork of homebridge-sonos](https://github.com/dominicstelljes/homebridge-sonos) by Dominic Stelljes
 
 Television implementation inspiration largely derived from the [homebridge-panasonic](https://github.com/g30r93g/homebridge-panasonic) plugin by George Nick Gorzynski
+
+Inspiration for the combined platform/accessory plugin (and therefore not breaking backward compatibility) taken from the [homebridge-webos-tv](https://github.com/merdok/homebridge-webos-tv/) plugin by merdok

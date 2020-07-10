@@ -1,141 +1,146 @@
 {
   "pluginAlias": "Beoplay",
-  "pluginType": "accessory",
+  "pluginType": "platform",
   "headerDisplay": "Homebridge plugin for Bang & Olufsen (Beoplay) TVs and Speakers. See [the Readme](https://github.com/connectjunkie/homebridge-beoplay#readme) for limitations/side effects to be aware of",
-  "singular": false,
+  "singular": true,
   "schema": {
-    "type": "object",
-    "properties": {
-      "name": {
-        "title": "Name",
-        "type": "string",
-        "default": "Speaker",
-        "required": true
-      },
-      "ip": {
-        "title": "IP Address",
-        "type": "string",
-        "default": "192.168.x.x",
-        "required": true
-      },
-      "type": {
-        "title": "Type of device to display in HomeKit",
-        "type": "string",
-        "default": "speaker",
-        "oneOf": [{
-            "title": "Speaker",
-            "enum": ["speaker"]
+    "devices": {
+      "type": "array",
+      "items": {
+        "title": "B&O/Beoplay device",
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "default": "Speaker",
+            "required": true
           },
-          {
-            "title": "Bulb",
-            "enum": ["bulb"]
+          "ip": {
+            "title": "IP Address",
+            "description": "The IP address of your device",
+            "type": "string",
+            "format": "ipv4",
+            "required": true
           },
-          {
-            "title": "Fan",
-            "enum": ["fan"]
+          "type": {
+            "title": "Type of device to display in HomeKit",
+            "description": "Defaults to Speaker",
+            "type": "string",
+            "oneOf": [{
+                "title": "Speaker",
+                "enum": ["speaker"]
+              },
+              {
+                "title": "Bulb",
+                "enum": ["bulb"]
+              },
+              {
+                "title": "Fan",
+                "enum": ["fan"]
+              },
+              {
+                "title": "TV",
+                "enum": ["tv"]
+              }
+            ],
+            "required": false
           },
-          {
-            "title": "TV",
-            "enum": ["tv"]
-          }
-        ],
-        "required": false
-      },
-      "mode": {
-        "title": "Mute or Standby when turning off",
-        "type": "string",
-        "default": "mute",
-        "oneOf": [{
-            "title": "Mute Device",
-            "enum": ["mute"]
+          "mode": {
+            "title": "Mute or Standby when turning off",
+            "description": "Defaults to Mute for speakers and Standby for TVs",
+            "type": "string",
+            "oneOf": [{
+                "title": "Mute Device",
+                "enum": ["mute"]
+              },
+              {
+                "title": "Put into Standby Mode",
+                "enum": ["power"]
+              }
+            ],
+            "required": false
           },
-          {
-            "title": "Put into Standby Mode",
-            "enum": ["power"]
-          }
-        ],
-        "required": false
-      },
-      "on": {
-        "title": "Power on via setting and input or via the API",
-        "type": "string",
-        "default": "on",
-        "oneOf": [{
-            "title": "Power on via the API",
-            "enum": ["on"]
+          "on": {
+            "title": "Power on via setting and input or via the API",
+            "description": "Defaults to API for speakers and via an input for TVs",
+            "type": "string",
+            "oneOf": [{
+                "title": "Power on via the API",
+                "enum": ["on"]
+              },
+              {
+                "title": "Power on via setting an input (default for TVs)",
+                "enum": ["input"]
+              }
+            ],
+            "required": false
           },
-          {
-            "title": "Power on via setting an input (default for TVs)",
-            "enum": ["input"]
-          }
-        ],
-        "required": false
-      },
-      "default": {
-        "title": "Input used to power on the device by default (when using that functionality)",
-        "type": "integer",
-        "default": 1,
-        "required": false
-      },
-      "inputs": {
-        "title": "Inputs to be configured",
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "title": "Name of the Input",
-              "type": "string",
-              "default": "HDMI 1",
-              "required": true
-            },
-            "type": {
-              "title": "Input type",
-              "type": "string",
-              "default": "HDMI",
-              "oneOf": [{
-                  "title": "TV Tuner",
-                  "enum": ["TUNER"]
+          "default": {
+            "title": "Input used to power on the device by default (when using that functionality)",
+            "description": "Defaults to input 1",
+            "type": "integer",
+            "required": false
+          },
+          "inputs": {
+            "title": "Inputs to be configured",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "title": "Name of the Input",
+                  "description": "The name displayed in the Home app",
+                  "type": "string",
+                  "required": true
                 },
-                {
-                  "title": "HDMI",
-                  "enum": ["HDMI"]
+                "type": {
+                  "title": "Input type",
+                  "type": "string",
+                  "oneOf": [{
+                      "title": "TV Tuner",
+                      "enum": ["TUNER"]
+                    },
+                    {
+                      "title": "HDMI",
+                      "enum": ["HDMI"]
+                    },
+                    {
+                      "title": "Application",
+                      "enum": ["APPLICATION"]
+                    },
+                    {
+                      "title": "AirPlay",
+                      "enum": ["AIRPLAY"]
+                    },
+                    {
+                      "title": "Other",
+                      "enum": ["OTHER"]
+                    }
+                  ],
+                  "required": true
                 },
-                {
-                  "title": "Application",
-                  "enum": ["APPLICATION"]
-                },
-                {
-                  "title": "AirPlay",
-                  "enum": ["AIRPLAY"]
-                },
-                {
-                  "title": "Other",
-                  "enum": ["OTHER"]
+                "apiID": {
+                  "title": "API id value from the BeoPlay API for the input",
+                  "type": "string",
+                  "required": true,
+                  "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
                 }
-              ],
-              "required": true
+              }
             },
-            "apiID": {
-              "title": "API id value from the BeoPlay API for the input",
-              "type": "string",
-              "default": "radio:1111.222222.33333333@products.bang-olufsen.com",
-              "required": true,
-              "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
-            }
+            "required": false
           },
-          "required": false
+          "exclude": {
+            "title": "Inputs to exclude for automatic setup",
+            "type": "array",
+            "items": {
+              "title": "API id value",
+              "type": "string",
+              "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
+            },
+            "required": false
+          }
         }
-      },
-      "exclude": {
-        "title": "Inputs to exclude for automatic setup",
-        "type": "array",
-        "items": {
-          "title": "API id value",
-          "type": "string",
-          "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
-        },
-        "required": false
       }
     }
   }
