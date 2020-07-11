@@ -58,6 +58,16 @@ This plugin has transitioned from being an Accessory plugin to a Platform plugin
 
 Note that the primary difference between the Accessory plugin setup and Platform plugin setup is that TVs are exposed differently to the Home app. On migration you will need to add each device using the TV integration as an external device in the Home app (it will not be added automatically) as per the guidance below. 
 
+## Adding your TVs to the Home app
+Note that devices using the TV integration are exposed as external accessories and as such will not automatically be shown in the Home app or Control Centre remote - they need to be added as if they were a standalone HomeKit device.
+
+To add a TV to HomeKit follow this steps:
+* Open the Home app
+* Select Add Accessory
+* Tap on "I Don't Have a Code or Cannot Scan"
+
+The TV should appear on the next page. Select it and when asked for a PIN, use the same PIN you used for Homebridge (in the `bridge` section of your `config.json`). If you have multiple TVs, follow the same process for them all.
+
 # Notes
 
 ## Type parameter
