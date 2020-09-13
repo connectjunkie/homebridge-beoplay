@@ -10,10 +10,9 @@ Note that the plugin honours the B&O speaker's "maximum volume" setting, so tryi
 
 Homebridge is published through [NPM](https://www.npmjs.com/package/homebridge) and should be installed "globally" by typing:
 
-    sudo npm install -g homebridge
     sudo npm install -g homebridge-beoplay
 
-If you don't have Homebridge installed, [check the repository](https://github.com/nfarina/homebridge) for detailed setup instructions.
+If you don't have Homebridge installed, [check the repository](https://github.com/homebridge/homebridge) for detailed setup instructions.
 
 # Community
 
@@ -56,7 +55,9 @@ Option | Default | Explanation
 
 This plugin has transitioned from being an Accessory plugin to a Platform plugin. While backward compatibility has been retained for now, you should migrate to the new platform configuration in your config.json if you plan to use the TV integration at all - especially with multiple devices using this integration or with iOS 14.
 
-Note that the primary difference between the Accessory plugin setup and Platform plugin setup is that TVs are exposed differently to the Home app. On migration you will need to add each device using the TV integration as an external device in the Home app (it will not be added automatically) as per the guidance below. 
+Updating your `config.json` should be straightforward - the previous configuration from the "accessories" section is identical to what is needed for a "devices" entry - just remove the `"accessory": "Beoplay"` line.
+
+Note that the primary difference between the Accessory plugin setup experience and Platform plugin setup experience is that TVs will now be exposed differently to the Home app. On migration you will need to add each TV device as an external device in the Home app (it will not be added automatically) as per the guidance below. 
 
 ## Adding your TVs to the Home app
 Note that devices using the TV integration are exposed as external accessories and as such will not automatically be shown in the Home app or Control Centre remote - they need to be added as if they were a standalone HomeKit device.
