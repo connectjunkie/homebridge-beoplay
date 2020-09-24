@@ -136,3 +136,5 @@ Inspiration for the Lightbulb implementation is derived from a [fork of homebrid
 Television implementation inspiration largely derived from the [homebridge-panasonic](https://github.com/g30r93g/homebridge-panasonic) plugin by George Nick Gorzynski
 
 Inspiration for the combined platform/accessory plugin (and therefore not breaking backward compatibility) taken from the [homebridge-webos-tv](https://github.com/merdok/homebridge-webos-tv/) plugin by merdok
+
+Inspiration for patterns on handling cached accessories taken from the [homebridge-dyson-pure-cool](https://github.com/lukasroegner/homebridge-dyson-pure-cool) plugin by Lukas Rögner
