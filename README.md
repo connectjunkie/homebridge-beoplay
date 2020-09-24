@@ -84,7 +84,7 @@ Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
 
 Note that for the `bulb` option, Siri will include the device within commands that effect all lighting, so Siri will turn the speaker off if you say "Turn off the lights" and will change the volume if you say "Dim the lights to 20%". 
 
-Note that for the `tv` option the remote control support within the Control Centre remote (for media control etc) is not currently implemented. There is also a limitation in that only one TV can be exposed via Homebridge as an accessory at a time. This may mean that you won't be able to use this integration type if you already have another Homebridge TV plugin installed, or with multiple B&O devices - unless you have multiple instances of Homebridge running. 
+Note that for the `tv` option the remote control support within the Control Centre remote (for media control etc) is not currently implemented.
 
 ## Mode parameter
 
