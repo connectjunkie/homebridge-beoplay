@@ -27,7 +27,7 @@ sudo npm install -g homebridge-beoplay
 
 # Community
 
-Note there is now a `#beoplay` group on the Homebridge community on [Discord](https://discord.gg/Z8jmyvb) for any usage and setup queries and/or bug reports.
+Note there is now a `#beoplay` group on the Homebridge community on [Discord](https://discord.gg/hGmGFh9) for any usage and setup queries and/or bug reports.
 
 # Configuration
 
