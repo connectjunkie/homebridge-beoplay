@@ -1,8 +1,10 @@
 # Homebridge plugin for Bang & Olufsen/Beoplay devices
 [![NPM downloads](https://flat.badgen.net/npm/dt/homebridge-beoplay?color=blue)](https://npmjs.com/package/homebridge-beoplay)
 [![NPM version](https://flat.badgen.net/npm/v/homebridge-beoplay?color=blue)](https://npmjs.com/package/homebridge-beoplay)
+[![Homebridge Discord](https://img.shields.io/discord/432663330281226270?color=728ED5&logo=discord&label=discord)](https://discord.gg/hGmGFh9)
 [![GitHub issues](https://flat.badgen.net/github/open-issues/connectjunkie/homebridge-beoplay?label=issues&color=green)](https://github.com/connectjunkie/homebridge-beoplay/issues)
 [![GitHub pull requests](https://flat.badgen.net/github/prs/connectjunkie/homebridge-beoplay?label=pull%20requests&color=green)](https://github.com/connectjunkie/homebridge-beoplay/pulls)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Licence](https://flat.badgen.net/npm/license/homebridge-beoplay?color=red)](LICENSE)
 
 This plugin allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).
