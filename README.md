@@ -1,4 +1,9 @@
 # Homebridge plugin for Bang & Olufsen/Beoplay devices
+[![NPM downloads](https://flat.badgen.net/npm/dt/homebridge-beoplay?color=blue)](https://npmjs.com/package/homebridge-beoplay)
+[![NPM version](https://flat.badgen.net/npm/v/homebridge-beoplay?color=blue)](https://npmjs.com/package/homebridge-beoplay)
+[![GitHub issues](https://flat.badgen.net/github/open-issues/connectjunkie/homebridge-beoplay?label=issues&color=green)](https://github.com/connectjunkie/homebridge-beoplay/issues)
+[![GitHub pull requests](https://flat.badgen.net/github/prs/connectjunkie/homebridge-beoplay?label=pull%20requests&color=green)](https://github.com/connectjunkie/homebridge-beoplay/pulls)
+[![Licence](https://flat.badgen.net/npm/license/homebridge-beoplay?color=red)](LICENSE)
 
 This plugin allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri (see notes below).
 
@@ -8,11 +13,15 @@ Note that the plugin honours the B&O device's "maximum volume" setting, so tryin
 
 # Installation
 
-Homebridge is published through [NPM](https://www.npmjs.com/package/homebridge) and should be installed "globally" by typing:
+**Option 1: Install via Homebridge Config UI X:**
 
-    sudo npm install -g homebridge-beoplay
+Search for "beoplay" in [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) and install `homebridge-beoplay`.
 
-If you don't have Homebridge installed, [check the repository](https://github.com/homebridge/homebridge) for detailed setup instructions.
+**Option 2: Manually Install:**
+
+```
+sudo npm install -g homebridge-beoplay
+```
 
 # Community
 
