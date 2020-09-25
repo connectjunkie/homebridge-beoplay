@@ -10,3 +10,4 @@ All notable changes from version 1.0.0 to this project will be documented in thi
 
 ### Bug Fixes
 * Multiple TVs are now properly supported in the platform plugin - all configured TVs will now show up in the Control Centre remote. Note that TVs are now exposed to HomeKit as external accessories, so these will need to be added to the Home app individually - see instructions in the README on how to do this.
+* TVs will show with the correct icon in iOS 14 in the platform plugin
