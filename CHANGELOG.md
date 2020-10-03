@@ -2,6 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.0.1 (2020-10-03)
+
+### Features
+* Initial support for powering on via joining a B&O multiroom experience
+
 ## 1.0.0 (2020-09-26)
 
 ### Features
