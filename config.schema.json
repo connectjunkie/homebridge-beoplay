@@ -62,7 +62,7 @@
             "required": false
           },
           "on": {
-            "title": "Power on via setting and input or via the API",
+            "title": "Power on via setting an input, via the API, or by joining a multiroom experience",
             "description": "Defaults to API for speakers and via an input for TVs",
             "type": "string",
             "oneOf": [{
@@ -72,6 +72,10 @@
               {
                 "title": "Power on via setting an input (default for TVs)",
                 "enum": ["input"]
+              },
+              {
+                "title": "Power on via joining a multiroom experience",
+                "enum": ["join"]
               }
             ],
             "required": false
