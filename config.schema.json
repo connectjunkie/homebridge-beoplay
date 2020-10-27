@@ -86,6 +86,12 @@
             "type": "integer",
             "required": false
           },
+          "interval": {
+            "title": "How often devices are polled for their status (in milliseconds)",
+            "description": "Defaults to every 5 seconds",
+            "type": "integer",
+            "required": false
+          },
           "inputs": {
             "title": "Inputs to be configured",
             "type": "array",
