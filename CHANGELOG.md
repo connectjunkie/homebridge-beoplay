@@ -5,6 +5,7 @@ All notable changes from version 1.0.0 to this project will be documented in thi
 ## 1.1.0 (2020-10-04)
 ### Features
 * Changes the plugin to a polling basis, so user experience where the device is also controlled outside of HomeKit will be better as it will reflect those state changes
+* Introduces a new "interval" config option that defines the polling interval in milliseconds (default 10 seconds)
 
 ## 1.0.1 (2020-10-03)
 
