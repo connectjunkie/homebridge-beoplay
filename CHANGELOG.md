@@ -2,7 +2,7 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
-## 1.1.0 (2020-11-24)
+## 1.1.0 (2020-12-28)
 ### Features
 * Changes the basis the plugin accesses the device to subscribing to state notifications, so user experience where the device is also controlled outside of HomeKit will be better as it will reflect those state changes
 
