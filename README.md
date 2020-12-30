@@ -98,7 +98,7 @@ Note that for the `bulb` option, Siri will include the device within commands th
 
 Note that for the `tv` option the remote control support within the Control Centre remote (for media control etc) is not currently implemented.
 
-Note for the `smartspeaker` option that you can also control the mute state and volume for the device via HomeKit scenes/automations. 
+Note for the `smartspeaker` option that you can also set the volume for the device via HomeKit scenes/automations. 
 
 ## Mode parameter
 
