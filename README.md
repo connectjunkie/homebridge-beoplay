@@ -90,7 +90,7 @@ Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
 --- | --- | --- | ---
 `tv` | on/off and change input. Volume up/down via hardware buttons in Control Centre remote app | on/off | Not supported
 `speaker` | Not supported | Not supported | May be supported (works in Eve, Home+)
-`smartspeaker` | play/pause | Not supported | Not supported
+`smartspeaker` | play/pause. Volume setting supported via creating a Scenes or Automation | Not supported | Not supported
 `bulb` | on/off and volume | on/off and volume | on/off and volume
 `fan` | on/off and volume | on/off and volume | on/off and volume
 
@@ -98,7 +98,7 @@ Note that for the `bulb` option, Siri will include the device within commands th
 
 Note that for the `tv` option the remote control support within the Control Centre remote (for media control etc) is not currently implemented.
 
-Note for the `smartspeaker` option that you can also set the volume for the device via HomeKit scenes/automations. 
+Note for the `smartspeaker` option that you can only adjust the volume, pause audio and resume audio within a HomeKit Scene/Automation. You cannot use the `Play Audio` option with this plugin as that uses Airplay 2, not HomeKit, to play the audio.
 
 ## Mode parameter
 
