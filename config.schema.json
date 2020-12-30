@@ -32,6 +32,9 @@
                 "enum": ["speaker"]
               },
               {
+                "title": "Smart Speaker",
+                "enum": ["smartspeaker"]},
+              {
                 "title": "Bulb",
                 "enum": ["bulb"]
               },
