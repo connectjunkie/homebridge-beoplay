@@ -2,6 +2,20 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.0 (2021-01-03)
+### Features
+* Initial support for using the Control Center Remote to control devices using the TV integration
+
+### Bug Fixes
+* Fix to only mute a Speaker integration if the type is set to Mute
+* Added missing updates for SmartSpeaker mute and volume settings (not visible in the Home app)
+* Fix for HAP Characteristic error message
+* Fixed muting behaviour for TVs and Smart Speakers (not visible in the Home app)
+
+## 1.2.1 (2020-12-30)
+### Bug Fixes
+* Fix breaking change introduced in 1.2.0 if you were using any type other than a Smart Speaker
+
 ## 1.2.0 (2020-12-30)
 ### Features
 * Initial support for presenting your B&O device as a HomeKit SmartSpeaker

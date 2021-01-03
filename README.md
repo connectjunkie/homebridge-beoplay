@@ -88,7 +88,7 @@ Note that any of the types can be used regardless of whether the B&O device is a
 
 Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
 --- | --- | --- | ---
-`tv` | on/off and change input. Volume up/down via hardware buttons in Control Centre remote app | on/off | Not supported
+`tv` | on/off and change input. Volume up/down via hardware buttons and media control in Control Centre remote | on/off | Not supported
 `speaker` | Not supported | Not supported | May be supported (works in Eve, Home+)
 `smartspeaker` | play/pause. Volume setting supported via creating a Scenes or Automation | Not supported | Not supported
 `bulb` | on/off and volume | on/off and volume | on/off and volume
@@ -96,13 +96,28 @@ Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
 
 Note that for the `bulb` option, Siri will include the device within commands that effect all lighting, so Siri will turn the speaker off if you say "Turn off the lights" and will change the volume if you say "Dim the lights to 20%". 
 
-Note that for the `tv` option the remote control support within the Control Centre remote (for media control etc) is not currently implemented.
-
 Note for the `smartspeaker` option that you can only adjust the volume, pause audio and resume audio within a HomeKit Scene/Automation. You cannot use the `Play Audio` option with this plugin as that uses Airplay 2, not HomeKit, to play the audio.
 
 ## Mode parameter
 
 The plugin will mute a speaker, fan or bulb by default. By setting "mode" to "power" the plugin will instead put the device into standby mode instead of muting. This may be preferable, depending on what  behaviour you are looking for.
+
+## TV Media Control in the Control Center Remote
+
+For TV integrations, volume can be incremented/decremented via the hardware buttons on your iOS device in the Control Center Remote application. 
+
+Additionally, the following functionality has been mapped to each of the following buttons in the Control Centre Remote:
+
+Button | Functionality  
+--- | --- 
+Arrow Up | Volume Up
+Arrow Down | Volume Down
+Arrow Left | Media Back
+Arrow Right | Media Forward
+Select (Button in Middle of Arrows) | Toggle Mute
+Play/Pause | Play/Pause
+Back | Leave Multiroom Experience
+Information | Join Multiroom Experience
 
 ## Inputs parameter
 
