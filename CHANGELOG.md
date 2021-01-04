@@ -2,6 +2,14 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.2 (2021-01-04)
+### Enhancement
+* Improve descriptions on Config-UI-X settings configuration screen
+
+## 1.3.1 (2021-01-04)
+### Bug Fixes
+* Fix for validating API ids with underscores and numbers
+
 ## 1.3.0 (2021-01-03)
 ### Features
 * Initial support for using the Control Center Remote to control devices using the TV integration
