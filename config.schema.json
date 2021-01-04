@@ -12,8 +12,9 @@
         "properties": {
           "name": {
             "title": "Name",
+            "description": "What the device will be named in HomeKit",
             "type": "string",
-            "default": "Speaker",
+            "default": "B&O",
             "required": true
           },
           "ip": {
@@ -24,7 +25,7 @@
             "required": true
           },
           "type": {
-            "title": "Type of device to display in HomeKit",
+            "title": "(Optional) What device to display the B&O device as in HomeKit",
             "description": "Defaults to Speaker",
             "type": "string",
             "oneOf": [{
@@ -50,23 +51,23 @@
             "required": false
           },
           "mode": {
-            "title": "Mute or Standby when turning off",
-            "description": "Defaults to Mute for speakers and Standby for TVs",
+            "title": "(Optional) Whether to mute/unmute or to power on/standby a Speaker, Bulb or Fan when selected",
+            "description": "Defaults to Mute for speakers, smart speakers, bulbs and fans. Defaults to power on/standby for TVs",
             "type": "string",
             "oneOf": [{
                 "title": "Mute Device",
                 "enum": ["mute"]
               },
               {
-                "title": "Put into Standby Mode",
+                "title": "Power On/Standby",
                 "enum": ["power"]
               }
             ],
             "required": false
           },
           "on": {
-            "title": "Power on via setting an input, via the API, or by joining a multiroom experience",
-            "description": "Defaults to API for speakers and via an input for TVs",
+            "title": "(Optional) Power on via setting an input, via the API, or by joining a multiroom experience",
+            "description": "Defaults to API for speakers, smart speakers, bulbs, and fans. Defaults to via an input for TVs",
             "type": "string",
             "oneOf": [{
                 "title": "Power on via the API",
@@ -84,20 +85,20 @@
             "required": false
           },
           "default": {
-            "title": "Input used to power on the device by default (when using that functionality)",
+            "title": "(Optional) Input used to power on the device by default (when using that functionality)",
             "description": "Defaults to input 1",
             "type": "integer",
             "required": false
           },
           "inputs": {
-            "title": "Inputs to be configured",
+            "title": "(Optional) Inputs to be configured",
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
                 "name": {
                   "title": "Name of the Input",
-                  "description": "The name displayed in the Home app",
+                  "description": "The name to be displayed in the Home app",
                   "type": "string",
                   "required": true
                 },
@@ -131,19 +132,19 @@
                   "title": "API id value from the BeoPlay API for the input",
                   "type": "string",
                   "required": true,
-                  "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
+                  "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/.  Example: bluetooth:1111.2222222.33333333@products.bang-olufsen.com"
                 }
               }
             },
             "required": false
           },
           "exclude": {
-            "title": "Inputs to exclude for automatic setup",
+            "title": "(Optional) Inputs to exclude for automatic setup",
             "type": "array",
             "items": {
-              "title": "API id value",
+              "title": "API id value to exclude",
               "type": "string",
-              "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/"
+              "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/. Example: bluetooth:1111.2222222.33333333@products.bang-olufsen.com"
             },
             "required": false
           }
