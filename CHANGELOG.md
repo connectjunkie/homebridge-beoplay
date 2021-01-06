@@ -2,6 +2,15 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.4 (2021-01-07)
+### Bug Fixes
+* Allow the same device to be used as multiple integration types (e.g. TV and bulb at the same time) (#14)
+
+## 1.3.3 (2021-01-06)
+### Enhancement
+* Improve error handling of malformed config.json
+* Validation cover increased to all config.json values
+
 ## 1.3.2 (2021-01-04)
 ### Enhancement
 * Improve descriptions on Config-UI-X settings configuration screen
