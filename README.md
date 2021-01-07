@@ -73,12 +73,12 @@ Note that the primary difference between the Accessory plugin setup experience a
 ## Adding your TVs and Smart Speakers to the Home app
 Note that devices using the TV and Smart Speaker integrations are exposed as external accessories and as such will not automatically be shown in the Home app or Control Centre remote - they need to be added as if they were a standalone HomeKit device.
 
-To add a TV to HomeKit follow this steps:
+To add a TV or Smart Speaker to HomeKit follow this steps:
 * Open the Home app
 * Select Add Accessory
 * Tap on "I Don't Have a Code or Cannot Scan"
 
-The TV or Smart Speaker should appear on the next page. Select it and when asked for a PIN, use the same PIN you used for Homebridge (in the `bridge` section of your `config.json`). If you have multiple TVs, follow the same process for them all.
+The TV or Smart Speaker should appear on the next page. Select it and when asked for a PIN, use the same PIN you used for Homebridge (in the `bridge` section of your `config.json`). If you have multiple devices using these integrations, follow the same process for them all.
 
 # Notes
 
