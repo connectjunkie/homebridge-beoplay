@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.5 (2021-01-07)
+### Bug Fixes
+* Fixed issue where TVs and Smart Speakers were not published properly as external accessories
+
 ## 1.3.4 (2021-01-07)
 ### Bug Fixes
 * Allow the same device to be used as multiple integration types (e.g. TV and bulb at the same time) (#14)
