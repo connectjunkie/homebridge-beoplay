@@ -2,6 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.6 (2021-01-11)
+### Bug Fixes
+* Improve error handling for situations where there is no connectivity/wrong IP address supplied
+* JavaScript Standard updates and removing unhandled errors from legacy Accessory code 
+
 ## 1.3.5 (2021-01-07)
 ### Bug Fixes
 * Fixed issue where TVs and Smart Speakers were not published properly as external accessories
