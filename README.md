@@ -13,27 +13,37 @@ Due to the limitations of support for speakers in HomeKit, B&O devices can be re
 
 Note that the plugin honours the B&O device's "maximum volume" setting, so trying to set the volume to higher than this will set the volume to the maximum.
 
+# Community
+
+Note there is now a `#beoplay` group on the Homebridge community on [Discord](https://discord.gg/hGmGFh9) for any usage and setup queries and/or bug reports.
+
 # Installation
 
 **Option 1: Install via Homebridge Config UI X:**
 
 Search for "beoplay" in [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) and install `homebridge-beoplay`.
 
-**Option 2: Manually Install:**
+**Option 2: Install via HOOBS:**
+
+Search for "homebridge-beoplay" in [HOOBS](https://hoobs.org) and install.
+
+**Option 3: Manually Install:**
 
 ```
 sudo npm install -g homebridge-beoplay
 ```
 
-# Community
-
-Note there is now a `#beoplay` group on the Homebridge community on [Discord](https://discord.gg/hGmGFh9) for any usage and setup queries and/or bug reports.
-
 # Configuration
 
 The plugin is configured as part of your Homebridge `config.json` file.
 
-## Example addition to existing config.json:
+**Option 1: Configure via Homebridge Config UI X:**
+
+`homebridge-beoplay` supports plugin configuration within Config-UI-X (Plugins -> Homebridge Beoplay -> Settings). Note that most of the options (as noted below) are optional. Where you have multiple B&O devices you want to configure, make sure to add additional devices using the `Add B&O/Beoplay Device` button at the bottom of the configuration interface.
+
+**Option 2: Configure Manually:**
+
+The following is an example addition to an existing config.json. See below for valid options and values you can provide. Please note, `homebridge-beoplay` does not have any platform level settings - all settings are at the device level.
 
       "platforms": [
         {
@@ -50,6 +60,23 @@ The plugin is configured as part of your Homebridge `config.json` file.
           ]
         }
       ]
+
+**Option 3: Configure via HOOBS:**
+
+Within the HOOBS interface you will  be presented with a "Devices" box within the interface when first installing the plugin. This should be configured as above ("Option 2: Configure Manually"), by supplying only the values for the `devices` section, as below: 
+
+          [
+            {
+              "name": "Bedroom Speakers",
+              "ip": "192.168.x.x"
+            },
+            {
+              "name": "Living Room TV",
+              "ip": "192.168.x.x"
+            }
+          ]
+
+## Options
 
 Only the name and ip options are required, however there are a number of optional parameters supported in order to modify the device behaviour:
 
