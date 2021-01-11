@@ -117,7 +117,7 @@ Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
 --- | --- | --- | ---
 `tv` | on/off and change input. Volume up/down via hardware buttons and media control in Control Centre remote | on/off | Not supported
 `speaker` | Not supported | Not supported | May be supported (works in Eve, Home+)
-`smartspeaker` | play/pause. Volume setting supported via creating a Scenes or Automation | Not supported | Not supported
+`smartspeaker` | play/pause. Volume setting supported via creating a Scene or Automation | Not supported | Not supported
 `bulb` | on/off and volume | on/off and volume | on/off and volume
 `fan` | on/off and volume | on/off and volume | on/off and volume
 
