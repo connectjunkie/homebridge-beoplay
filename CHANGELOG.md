@@ -2,6 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.7 (2021-01-12)
+### Enhancements
+* Homebridge-beoplay is now a verified plugin
+* Enhancements to README to document how to configure the plugin for HOOBS
+
 ## 1.3.6 (2021-01-11)
 ### Bug Fixes
 * Improve error handling for situations where there is no connectivity/wrong IP address supplied
