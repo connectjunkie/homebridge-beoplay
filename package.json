@@ -14,6 +14,10 @@
   "author": {
     "name": "connectjunkie"
   },
+  "funding": {
+    "type" : "ko-fi",
+    "url" : "ko-fi.com/connectjunkie"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/connectjunkie/homebridge-beoplay.git"
