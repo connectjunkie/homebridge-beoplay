@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.8 (2021-01-18)
+### Bug Fixes
+* Fixes for a JavaScript scope error in notifications stream error handling code
+
 ## 1.3.7 (2021-01-12)
 ### Enhancements
 * Homebridge-beoplay is now a verified plugin
