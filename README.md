@@ -89,6 +89,7 @@ Option | Default | Explanation
 `default` | `1` | The input number selected to power on the device when coming out of standby
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
 `exclude` | `undefined` | If you don't supply inputs manually (via `inputs` above) these will be parsed automatically from the device. The `exclude` option allows you to exclude specific inputs from being automatically setup - for example, on a speaker its unlikely you use all of the supported music services, and on a TV you may not use all of the available inputs. See below for the format.
+`speakergroups` | `undefined` | If you don't supply Speaker Groups these will be parsed automatically from the device. See below for the format.
 
 ## Migration from plugin version 0.2.x to 1.x.x
 
@@ -138,8 +139,8 @@ Additionally, the following functionality has been mapped to each of the followi
 
 Button | Functionality  
 --- | --- 
-Arrow Up | Volume Up
-Arrow Down | Volume Down
+Arrow Up | Next Speaker Group
+Arrow Down | Previous Speaker Group
 Arrow Left | Media Back
 Arrow Right | Media Forward
 Select (Button in Middle of Arrows) | Toggle Mute
@@ -149,7 +150,7 @@ Information | Join Multiroom Experience
 
 ## Inputs parameter
 
-Inputs for the TV integation type are defined as follows:
+Inputs for the TV integration type are defined as follows:
 
     "inputs": [{
             "name": "Tune In",
@@ -184,6 +185,22 @@ Exclude options for the TV integration type are defined as follows:
 The values to supply are the `id` value for the input in the Beoplay API. As per for the `inputs` values, the inputs supported by your device can be found by browsing to the following URL path on your device: http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/ 
 
 Ensure that you don't exclude inputs that you may use - if an excluded input is later used outside of Homebridge (for example AirPlay or Bluetooth) then the value will display incorrectly in the Home app, and the input on your device may be changed to one you have defined. 
+
+## SpeakerGroups parameter
+
+You can supply the SpeakerGroups manually in the following format. This is optional as they will be parsed from the device if this parameter is not supplied:
+
+    "speakergroups": [{
+            "id": 1,
+            "name": "Speaker Group 1"
+        },
+        {
+            "id": 2,
+            "name": "Speaker Group 2"
+        }
+    ]
+
+The values to supply for the `id` value for each Speaker Group can be found by browsing to the following URL path on your device: http://x.x.x.x:8080/BeoZone/Zone/Sound/SpeakerGroup/ 
 
 # Credits
 This plugin started life as a fork of the [homebridge-http-speaker](https://github.com/Supereg/homebridge-http-speaker) plugin by Supereg
