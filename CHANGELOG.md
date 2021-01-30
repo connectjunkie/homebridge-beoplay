@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.10 (2021-01-30)
+### Enhancements
+* Better support in TV integration for where no input is set. There will now be a 'None' input that will be visible in the interface
+
 ## 1.3.9 (2021-01-21)
 ### Enhancements
 * Support for changing Speaker Groups in the TV integration using the Control Center remote
