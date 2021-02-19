@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.11 (2021-02-19)
+### Bug Fixes
+* Minor fixes to callbacks for Homebridge 1.3.0 compatibility
+
 ## 1.3.10 (2021-01-30)
 ### Enhancements
 * Better support in TV integration for where no input is set. There will now be a 'None' input that will be visible in the interface
