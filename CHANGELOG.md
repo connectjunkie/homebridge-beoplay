@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.12 (2021-06-23)
+### Enhancements
+* The TV integration will now dynamically add an input that you haven't defined if you change the device to that input outside of the plugin
+
 ## 1.3.11 (2021-02-19)
 ### Bug Fixes
 * Minor fixes to callbacks for Homebridge 1.3.0 compatibility
