@@ -169,8 +169,6 @@ The values are as follows:
 - `type`: Can be one of `TV`, `HDMI`, `APPLICATION`, `AIRPLAY`, or `OTHER`
 - `apiID`: This is the `id` value for the input in the Beoplay API. This can be found by browsing to the following URL path on your device: http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/ 
 
-Ensure that you add all inputs that you may use - if you don't supply an input that is later used outside of Homebridge (for example, AirPlay or Bluetooth) then the value will display incorrectly in the Home app, and the input on your device may be changed to one you have defined.
-
 ## Exclude parameter
 
 Note that you can either supply an `inputs` value or an `exclude` value - if you supply both the `exclude` option will be ignored.
@@ -183,8 +181,6 @@ Exclude options for the TV integration type are defined as follows:
     ]
 
 The values to supply are the `id` value for the input in the Beoplay API. As per for the `inputs` values, the inputs supported by your device can be found by browsing to the following URL path on your device: http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/ 
-
-Ensure that you don't exclude inputs that you may use - if an excluded input is later used outside of Homebridge (for example AirPlay or Bluetooth) then the value will display incorrectly in the Home app, and the input on your device may be changed to one you have defined. 
 
 ## Speakergroups parameter
 
