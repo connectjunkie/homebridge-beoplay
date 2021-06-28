@@ -147,6 +147,33 @@
               "description": "API id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/ActiveSources/. Example: bluetooth:1111.2222222.33333333@products.bang-olufsen.com"
             },
             "required": false
+          },
+          "speakergroups": {
+            "title": "(Optional) Speaker groups to be configured",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                "title": "id value for the speaker group",
+                "type": "integer",
+                "description": "id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/Sound/SpeakerGroup/",
+                "required": true
+                },
+                "name": {
+                  "title": "Name of the speaker group",
+                  "description": "The name to be used for the speaker group",
+                  "type": "string",
+                  "required": true
+                }
+              }
+            },
+            "required": false
+          },
+          "debug": {
+            "title": "(Optional) Enable/disable debug level logging",
+            "type": "boolean",
+            "required": false
           }
         }
       }
