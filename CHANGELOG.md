@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.13 (2021-06-28)
+### Bug Fixes
+* Added speaker groups to the settings that can be configured in Config-UI-X
+
 ## 1.3.12 (2021-06-23)
 ### Enhancements
 * The TV integration will now dynamically add an input that you haven't defined if you change the device to that input outside of the plugin
