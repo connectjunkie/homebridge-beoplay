@@ -90,6 +90,7 @@ Option | Default | Explanation
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
 `exclude` | `undefined` | If you don't supply inputs manually (via `inputs` above) these will be parsed automatically from the device. The `exclude` option allows you to exclude specific inputs from being automatically setup - for example, on a speaker its unlikely you use all of the supported music services, and on a TV you may not use all of the available inputs. See below for the format.
 `speakergroups` | `undefined` | If you don't supply speaker groups these will be parsed automatically from the device. See below for the format.
+`speakergroupinputs` | `false` | If you want to show speaker groups instead of TV inputs when using the TV integration, set this option.
 
 ## Migration from plugin version 0.2.x to 1.x.x
 
