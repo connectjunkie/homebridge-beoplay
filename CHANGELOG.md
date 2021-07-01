@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.4.0 (TBD)
+## Enhancements
+* Users can now have speaker groups shown in the Home app TV integration instead of TV/speaker inputs
+
 ## 1.3.13 (2021-06-28)
 ### Bug Fixes
 * Added speaker groups to the settings that can be configured in Config-UI-X

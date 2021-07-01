@@ -170,6 +170,11 @@
             },
             "required": false
           },
+          "speakergroupinputs": {
+            "title": "(Optional) Show speaker groups instead of TV inputs (only applicable for TV integrations)",
+            "type": "boolean",
+            "required": false
+          },
           "debug": {
             "title": "(Optional) Enable/disable debug level logging",
             "type": "boolean",
