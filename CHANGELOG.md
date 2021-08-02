@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.15 (2021-08-02)
+### Bug Fixes
+* Broken dependency
+
 ## 1.3.14 (2021-08-02)
 ### Bug Fixes
 * Added better detection and logging for B&O TVs that don't have tuners
