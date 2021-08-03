@@ -28,7 +28,6 @@
   "dependencies": {
     "got": "^11.8.2",
     "is-ip": "^3.1.0",
-    "sync-request": "^6.1.0",
     "tunnel": "^0.0.6",
     "util": "^0.12.4",
     "ndjson": "^2.0.0",
