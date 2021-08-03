@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.18 (2021-08-03)
+### Bug Fixes
+* Fix for reading inputs from certain B&O TVs
+
 ## 1.3.17 (2021-08-03)
 ### Bug Fixes
 * Minor changes in TV detection
