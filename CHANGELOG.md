@@ -2,10 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
-## 1.3.16 (2021-08-03)
+## 1.3.17 (2021-08-03)
 ### Bug Fixes
 * Minor changes in TV detection
 * Improve input debugging
+* 1.3.16 was not released - skipping
 
 ## 1.3.15 (2021-08-02)
 ### Bug Fixes
