@@ -2,6 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.19 (2021-10-28)
+### Maintenance
+* Bumping versions for Homebridge and Node to current versions
+* Locking package dependencies to specific version numbers
+
 ## 1.3.18 (2021-08-03)
 ### Bug Fixes
 * Fix for reading inputs from certain B&O TVs
