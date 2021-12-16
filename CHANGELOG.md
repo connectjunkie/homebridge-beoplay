@@ -2,6 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.21 (2021-12-16)
+### Maintenance
+* Bumping versions for Homebridge and Node to current versions
+* Bumping dependencies
+
 ## 1.3.20 (2021-10-28)
 ### Maintenance
 * Bumping versions for Homebridge and Node to current versions
