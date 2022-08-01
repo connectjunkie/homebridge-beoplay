@@ -2,6 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.23 (2022-08-01)
+### Maintenance
+* Dependency bump (Node 16.16, Homebridge 1.5.0)
+* Updated dependencies with potential security vulnerabilities
+
 ## 1.3.22 (2021-12-20)
 ### Maintenance
 * Reverting the version of got (HTTP client) used to the non-ESM version
