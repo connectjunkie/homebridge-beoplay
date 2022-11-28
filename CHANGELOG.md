@@ -2,6 +2,12 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+# 1.3.24 (2022-11-29)
+### Maintenance
+* Dependency bump (Node 18.12, Homebridge 1.6.0)
+* Updated library dependencies
+* Updated to pure ESM code
+
 ## 1.3.23 (2022-08-01)
 ### Maintenance
 * Dependency bump (Node 16.16, Homebridge 1.5.0)

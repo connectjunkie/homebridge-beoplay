@@ -1,10 +1,8 @@
-'use strict'
+import BeoplayAccessory from './lib/BeoplayAccessory.js'
+import BeoplayPlatform from './lib/BeoplayPlatform.js'
+import { PLUGIN_NAME, PLATFORM_NAME } from './lib/Constants.js'
 
-const BeoplayAccessory = require('./lib/BeoplayAccessory')
-const BeoplayPlatform = require('./lib/BeoplayPlatform')
-const { PLUGIN_NAME, PLATFORM_NAME } = require('./lib/Constants')
-
-module.exports = function (homebridge) {
+export default function main (homebridge) {
   homebridge.registerAccessory(PLUGIN_NAME, PLATFORM_NAME, BeoplayAccessory)
   homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, BeoplayPlatform, true)
 }
