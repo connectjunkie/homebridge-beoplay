@@ -8,8 +8,8 @@
     "beoplay"
   ],
   "engines": {
-    "node": "^16.16",
-    "homebridge": "^1.5.0"
+    "node": "^14.21.1 || ^16.18.1 || ^18.12.1",
+    "homebridge": "^1.6.0"
   },
   "author": {
     "name": "connectjunkie"
