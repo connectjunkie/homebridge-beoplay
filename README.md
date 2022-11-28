@@ -121,7 +121,7 @@ Note for the `smartspeaker` option that you can only adjust the volume, pause au
 
 ## Mode parameter
 
-The plugin will mute a speaker by default when the mute button is selected, and turn on/off a TV, bulb or fan when the device power button is selected. By setting "mode" to "power" the plugin will power on/standby a speaker. By setting "mode" to "mute" the plugin will mute/unmute a fan, bulb or TV when the power button is selected. This may be preferable, depending on what  behaviour you are looking for.
+The plugin will mute/unmute a speaker when the mute button is selected, and turn on/off a TV, bulb or fan when the device power button is selected. By setting "mode" to "power" the plugin will power on/standby a speaker. By setting "mode" to "mute" the plugin will mute/unmute a fan, bulb or TV when the power button is selected. This may be preferable, depending on what  behaviour you are looking for.
 
 ## TV Media Control in the Control Center Remote
 
