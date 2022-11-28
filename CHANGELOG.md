@@ -6,6 +6,7 @@ All notable changes from version 1.0.0 to this project will be documented in thi
 ### Changes
 * Removed legacy Accessory support - now only a Platform plugin
 * Updated to pure ESM code
+* Fans and Bulbs have changed to defaulting to standby/on when turned on/off, instead of mute/unmute 
 ### Bug Fixes
 * Fix for device caching when a user does not supply a device name
 ### Maintenance

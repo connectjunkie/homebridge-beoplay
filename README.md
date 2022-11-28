@@ -79,12 +79,12 @@ Within the HOOBS interface you will  be presented with a "Devices" box within th
 
 ## Options
 
-Only the name and ip options are required, however there are a number of optional parameters supported in order to modify the device behaviour:
+Only the name and ip options are required. The defaults should be sensible in most cases, however there are a number of optional parameters supported in order to modify the device behaviour:
 
 Option | Default | Explanation
 --- | --- | ---
 `type` | `speaker` | What device type to present to HomeKit to represent the BeoPlay device. Values can be `speaker`, `smartspeaker`, `bulb`, `fan`, or `tv`. All have advantages and disadvantages - please see the notes below
-`mode` | `power` if type is `tv`, otherwise `mute` | What behaviour to perform when the device is muted (speaker) or turned off (bulb, fan and TV). Values can be `mute` or `power` - please see the notes below
+`mode` | `mute` if type is `speaker`, otherwise `power` | What behaviour to perform when the device is muted (speaker) or turned off (bulb, fan and TV). Values can be `mute` or `power` - please see the notes below
 `on` | `input` if type is `tv`, otherwise `on` | Define whether to power on the device from standby using the API (`on` - available for speakers), via setting an input (`input` - available for both speakers and TVs), or via joining a B&O multiroom experience (`join`)
 `default` | `1` | The input number selected to power on the device when coming out of standby
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
@@ -97,7 +97,7 @@ Note that devices using the TV and Smart Speaker integrations are exposed as ext
 To add a TV or Smart Speaker to HomeKit follow this steps:
 * Open the Home app
 * Select Add Accessory
-* Tap on "I Don't Have a Code or Cannot Scan"
+* Tap on the "More options..." link
 
 The TV or Smart Speaker should appear on the next page. Select it and when asked for a PIN, use the same PIN you used for Homebridge (in the `bridge` section of your `config.json`). If you have multiple devices using these integrations, follow the same process for them all.
 
@@ -110,7 +110,7 @@ Note that any of the types can be used regardless of whether the B&O device is a
 Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
 --- | --- | --- | ---
 `tv` | on/off and change input. Volume up/down via hardware buttons and media control in Control Centre remote | on/off | Not supported
-`speaker` | Not supported | Not supported | May be supported (works in Eve, Home+)
+`speaker` | Not supported | Not supported | May be supported (works in Eve, Home+) for mute/unmute and volume
 `smartspeaker` | play/pause. Volume setting supported via creating a Scene or Automation | Not supported | Not supported
 `bulb` | on/off and volume | on/off and volume | on/off and volume
 `fan` | on/off and volume | on/off and volume | on/off and volume
@@ -121,7 +121,7 @@ Note for the `smartspeaker` option that you can only adjust the volume, pause au
 
 ## Mode parameter
 
-The plugin will mute a speaker, fan or bulb by default. By setting "mode" to "power" the plugin will instead put the device into standby mode instead of muting. This may be preferable, depending on what  behaviour you are looking for.
+The plugin will mute a speaker by default when the mute button is selected, and turn on/off a TV, bulb or fan when the device power button is selected. By setting "mode" to "power" the plugin will power on/standby a speaker. By setting "mode" to "mute" the plugin will mute/unmute a fan, bulb or TV when the power button is selected. This may be preferable, depending on what  behaviour you are looking for.
 
 ## TV Media Control in the Control Center Remote
 
