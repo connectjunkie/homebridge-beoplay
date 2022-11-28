@@ -6,8 +6,10 @@ All notable changes from version 1.0.0 to this project will be documented in thi
 ### Changes
 * Removed legacy Accessory support - now only a Platform plugin
 * Updated to pure ESM code
+### Bug Fixes
+* Fix for device caching when a user does not supply a device name
 ### Maintenance
-* Dependency bump (Node 18.12, Homebridge 1.6.0)
+* Dependency bump (latest Node 14, 16, or 18, Homebridge 1.6.0)
 * Updated library dependencies
 
 ## 1.3.23 (2022-08-01)

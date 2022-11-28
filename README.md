@@ -91,14 +91,6 @@ Option | Default | Explanation
 `exclude` | `undefined` | If you don't supply inputs manually (via `inputs` above) these will be parsed automatically from the device. The `exclude` option allows you to exclude specific inputs from being automatically setup - for example, on a speaker its unlikely you use all of the supported music services, and on a TV you may not use all of the available inputs. See below for the format.
 `speakergroups` | `undefined` | If you don't supply speaker groups these will be parsed automatically from the device. See below for the format.
 
-## Migration from plugin version 0.2.x to 1.x.x
-
-This plugin has transitioned from being an Accessory plugin to a Platform plugin. While backward compatibility has been retained for now, you should migrate to the new platform configuration in your config.json if you plan to have any devices show in HomeKit as TVs.
-
-Updating your `config.json` should be straightforward - the previous configuration from the "accessories" section is identical to what is needed for a "devices" entry - just remove the `"accessory": "Beoplay"` line.
-
-Note that the primary difference between the Accessory plugin setup experience and Platform plugin setup experience is that TVs will now be exposed differently to the Home app. On migration you will need to add each TV device as an external device in the Home app (it will not be added automatically) as per the guidance below. 
-
 ## Adding your TVs and Smart Speakers to the Home app
 Note that devices using the TV and Smart Speaker integrations are exposed as external accessories and as such will not automatically be shown in the Home app or Control Centre remote - they need to be added as if they were a standalone HomeKit device.
 
@@ -204,7 +196,5 @@ This plugin started life as a fork of the [homebridge-http-speaker](https://gith
 Inspiration for the Lightbulb implementation is derived from a [fork of homebridge-sonos](https://github.com/dominicstelljes/homebridge-sonos) by Dominic Stelljes
 
 Television implementation inspiration largely derived from the [homebridge-panasonic](https://github.com/g30r93g/homebridge-panasonic) plugin by George Nick Gorzynski
-
-Inspiration for the combined platform/accessory plugin (and therefore not breaking backward compatibility) taken from the [homebridge-webos-tv](https://github.com/merdok/homebridge-webos-tv/) plugin by merdok
 
 Inspiration for patterns on handling cached accessories taken from the [homebridge-dyson-pure-cool](https://github.com/lukasroegner/homebridge-dyson-pure-cool) plugin by Lukas Rögner
