@@ -29,7 +29,6 @@
     "@supercharge/strings": "1.29.1",
     "got": "12.5.3",
     "ndjson": "2.0.0",
-    "sync-request": "6.1.0",
     "tunnel": "0.0.6",
     "util": "0.12.5"
   },
