@@ -3,10 +3,12 @@
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
 # 2.0 (2022-11-29)
-### Changes
+### Breaking Changes
+* The default device type (if you don't specify) will now be a fan, as this is the most widely controllable (in the Home app, via Siri, and via third party apps) without side effects
+* Fans and Bulbs have changed to defaulting to standby/on when turned on/off, instead of mute/unmute
 * Removed legacy Accessory support - now only a Platform plugin
+### Changes
 * Updated to pure ESM code
-* Fans and Bulbs have changed to defaulting to standby/on when turned on/off, instead of mute/unmute 
 ### Bug Fixes
 * Fix for device caching when a user does not supply a device name
 ### Maintenance

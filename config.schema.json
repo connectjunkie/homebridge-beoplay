@@ -26,7 +26,7 @@
           },
           "type": {
             "title": "(Optional) What device to display the B&O device as in HomeKit",
-            "description": "Defaults to Speaker",
+            "description": "Defaults to fan (for speakers) or tv (for TVs)",
             "type": "string",
             "oneOf": [{
                 "title": "Speaker",
@@ -52,7 +52,7 @@
           },
           "mode": {
             "title": "(Optional) Whether to mute/unmute or to power on/standby a Speaker, Bulb or Fan when selected",
-            "description": "Defaults to Mute for speakers, smart speakers, bulbs and fans. Defaults to power on/standby for TVs",
+            "description": "Defaults to Mute for speakers and smart speakers. Defaults to power on/standby for TVs, bulbs and fans",
             "type": "string",
             "oneOf": [{
                 "title": "Mute Device",
