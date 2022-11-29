@@ -83,10 +83,10 @@ Only the name and ip options are required. The defaults should be sensible in mo
 
 Option | Default | Explanation
 --- | --- | ---
-`type` | `fan` for speakers, `tv` for TVs | What device type to present to HomeKit to represent the BeoPlay device. Values can be `speaker`, `smartspeaker`, `bulb`, `fan`, or `tv`. All have advantages and disadvantages - please see the notes below
-`mode` | `mute` if type is `speaker`, otherwise `power` | What behaviour to perform when the device is muted (speaker) or turned off (bulb, fan and TV). Values can be `mute` or `power` - please see the notes below
+`type` | `fan` for speakers, `tv` for TVs | What device type to represent the BeoPlay device as in HomeKit. Values can be `speaker`, `smartspeaker`, `bulb`, `fan`, or `tv`. All have advantages and disadvantages - please see additional detail below
+`mode` | `mute` if type is `speaker` or `smartspeaker`, otherwise `power` | What behaviour to perform when the device is muted (speaker, smartspeaker) or turned off (bulb, fan and TV). Values can be `mute` or `power` - please see additional detail below
 `on` | `input` if type is `tv`, otherwise `on` | Define whether to power on the device from standby using the API (`on` - available for speakers), via setting an input (`input` - available for both speakers and TVs), or via joining a B&O multiroom experience (`join`)
-`default` | `1` | The input number selected to power on the device when coming out of standby
+`default` | `1` | The input number selected to power on the device when coming out of standby. Used when using an `on` value of `input`
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
 `exclude` | `undefined` | If you don't supply inputs manually (via `inputs` above) these will be parsed automatically from the device. The `exclude` option allows you to exclude specific inputs from being automatically setup - for example, on a speaker its unlikely you use all of the supported music services, and on a TV you may not use all of the available inputs. See below for the format.
 `speakergroups` | `undefined` | If you don't supply speaker groups these will be parsed automatically from the device. See below for the format.
@@ -101,7 +101,7 @@ To add a TV or Smart Speaker to HomeKit follow this steps:
 
 The TV or Smart Speaker should appear on the next page. Select it and when asked for a PIN, use the same PIN you used for Homebridge (in the `bridge` section of your `config.json`). If you have multiple devices using these integrations, follow the same process to add each.
 
-# Notes
+# Option details
 
 ## Type parameter
 
