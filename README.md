@@ -122,7 +122,7 @@ Note for the `smartspeaker` option that you can only adjust the volume, pause au
 
 ## Mode parameter
 
-The plugin will mute/unmute if using the speaker/smartspeaker integration type when the HomeKit mute button is selected/unselected, and turn on/off if using the TV, bulb or fan integrations when the HomeKit power button is on/off. By setting "mode" to "power" the plugin will instead power on/standby your speaker/smartspeaker integration when you unmute/mute. By setting "mode" to "mute" the plugin will instead mute/unmute a fan, bulb, switch or TV integration when the power button is turned off/on. This may be preferable, depending on what behaviour you are looking for.
+The plugin will mute/unmute if using the speaker/smartspeaker integration type when the HomeKit mute button is selected/unselected, and turn on/off if using the TV, bulb switch, or fan integrations when the HomeKit power button is on/off. By setting "mode" to "power" the plugin will instead power on/standby your speaker/smartspeaker integration when you unmute/mute. By setting "mode" to "mute" the plugin will instead mute/unmute a fan, bulb, switch or TV integration when the power button is turned off/on. This may be preferable, depending on what behaviour you are looking for.
 
 ## TV Media Control in the Control Center Remote
 
