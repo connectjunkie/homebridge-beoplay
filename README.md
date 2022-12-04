@@ -10,7 +10,7 @@
 
 This plugin allows you to control Bang & Olufsen Beoplay speakers and TVs using a HomeKit enabled iOS app or Siri. Note that this plugin does NOT work with B&O devices that use the new Mozart platform such as the Beolab 28, Beosound Balance, Beosound Emerge, Beosound Level or Beosound Theatre.
 
-Due to the limitations of support for speakers in HomeKit, B&O devices can be represented in HomeKit as a number of different devices - including as a TV, speaker, smart speaker, lightbulb, or fan. Which device you choose will determine which features can be controlled in which way (please see below). 
+Due to the limitations of support for speakers in HomeKit, B&O devices can be represented in HomeKit as a number of different devices - including as a TV, speaker, smart speaker, lightbulb, switch or fan. Which device you choose will determine which features can be controlled in which way (please see below). 
 
 Note that the plugin honours the B&O device's "maximum volume" setting, so trying to set the volume to higher than this will set the volume to the maximum.
 
@@ -83,7 +83,7 @@ Only the name and ip options are required. The defaults should be sensible in mo
 
 Option | Default | Explanation
 --- | --- | ---
-`type` | `fan` for speakers, `tv` for TVs | What device type to represent the BeoPlay device as in HomeKit. Values can be `speaker`, `smartspeaker`, `bulb`, `fan`, or `tv`. All have advantages and disadvantages - please see additional detail below
+`type` | `fan` for speakers, `tv` for TVs | What device type to represent the BeoPlay device as in HomeKit. Values can be `speaker`, `smartspeaker`, `bulb`, `fan`, `switch` or `tv`. All have advantages and disadvantages - please see additional detail below
 `mode` | `mute` if type is `speaker` or `smartspeaker`, otherwise `power` | What behaviour to perform when the device is muted (speaker, smartspeaker) or turned off (bulb, fan and TV). Values can be `mute` or `power` - please see additional detail below
 `on` | `input` if type is `tv`, otherwise `on` | Define whether to power on the device from standby using the API (`on` - available for speakers), via setting an input (`input` - available for both speakers and TVs), or via joining a B&O multiroom experience (`join`)
 `default` | `1` | The input number selected to power on the device when coming out of standby. Used when using an `on` value of `input`
@@ -114,6 +114,7 @@ Type | Apple Home app | Siri | Third party HomeKit app (ie Eve, Home+ etc)
 `smartspeaker` | play/pause. Volume setting supported via creating a Scene or Automation | Not supported | Not supported
 `bulb` | on/off and volume | on/off and volume | on/off and volume
 `fan` | on/off and volume | on/off and volume | on/off and volume
+`switch` | on/off | on/off | on/off and volume
 
 Note that for the `bulb` option, Siri will include the device within commands that effect all lighting, so Siri will turn the speaker off if you say "Turn off the lights" and will change the volume if you say "Dim the lights to 20%". 
 

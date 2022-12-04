@@ -44,6 +44,10 @@
                 "enum": ["fan"]
               },
               {
+                "title": "Switch",
+                "enum": ["switch"]
+              },
+              {
                 "title": "TV",
                 "enum": ["tv"]
               }

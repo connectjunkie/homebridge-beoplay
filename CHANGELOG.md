@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+# 2.1 (2022-12-04)
+### Changes
+* Added switch as a HomeKit device type 
+
 # 2.0 (2022-11-29)
 ### Breaking Changes
 * The default device type (if you don't specify) will now be a fan, as this is the most widely controllable (in the Home app, via Siri, and via third party apps) without side effects
