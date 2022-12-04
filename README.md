@@ -84,7 +84,7 @@ Only the name and ip options are required. The defaults should be sensible in mo
 Option | Default | Explanation
 --- | --- | ---
 `type` | `fan` for speakers, `tv` for TVs | What device type to represent the BeoPlay device as in HomeKit. Values can be `speaker`, `smartspeaker`, `bulb`, `fan`, `switch` or `tv`. All have advantages and disadvantages - please see additional detail below
-`mode` | `mute` if type is `speaker` or `smartspeaker`, otherwise `power` | What behaviour to perform when the device is muted (speaker, smartspeaker) or turned off (bulb, fan and TV). Values can be `mute` or `power` - please see additional detail below
+`mode` | `mute` if type is `speaker` or `smartspeaker`, otherwise `power` | What behaviour to perform when the device is muted (speaker, smartspeaker) or turned off (bulb, fan, switch and TV). Values can be `mute` or `power` - please see additional detail below
 `on` | `input` if type is `tv`, otherwise `on` | Define whether to power on the device from standby using the API (`on` - available for speakers), via setting an input (`input` - available for both speakers and TVs), or via joining a B&O multiroom experience (`join`)
 `default` | `1` | The input number selected to power on the device when coming out of standby. Used when using an `on` value of `input`
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
@@ -122,7 +122,7 @@ Note for the `smartspeaker` option that you can only adjust the volume, pause au
 
 ## Mode parameter
 
-The plugin will mute/unmute if using the speaker/smartspeaker integration type when the HomeKit mute button is selected/unselected, and turn on/off if using the TV, bulb or fan integrations when the HomeKit power button is on/off. By setting "mode" to "power" the plugin will instead power on/standby your speaker/smartspeaker integration when you unmute/mute. By setting "mode" to "mute" the plugin will instead mute/unmute a fan, bulb or TV integration when the power button is turned off/on. This may be preferable, depending on what behaviour you are looking for.
+The plugin will mute/unmute if using the speaker/smartspeaker integration type when the HomeKit mute button is selected/unselected, and turn on/off if using the TV, bulb or fan integrations when the HomeKit power button is on/off. By setting "mode" to "power" the plugin will instead power on/standby your speaker/smartspeaker integration when you unmute/mute. By setting "mode" to "mute" the plugin will instead mute/unmute a fan, bulb, switch or TV integration when the power button is turned off/on. This may be preferable, depending on what behaviour you are looking for.
 
 ## TV Media Control in the Control Center Remote
 
