@@ -2,6 +2,17 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+# 3.0 (2022-12-XX)
+### Breaking Changes
+* A volume selector will no longer be added to speaker integrations by default. You can add this back again by using the `addvolume` option as noted below.
+### Changes
+* You can now control volume, mute on/off, power on/off, and selected inputs for more integration types. These additional controls will not be visible to the Apple Home app or Siri, but should be accessible in third party HomeKit apps such as Eve or Home+. Additional control options that have been added:
+** `addmute` - add a mute switch to fans, bulbs or switches. 
+** `addvolume` - add a volume selector for speakers or switches
+** `addpower` - add a power switch to speakers
+** `addinputs` - add a switch for each device input to speakers, fans, bulbs or switches. Note, this will add a switch for all inputs on the device, and will ignore any `inputs` and `exclude` options you have set
+** `addall` - to add all supported additional controls for the device type
+
 # 2.1 (2022-12-04)
 ### Changes
 * Added switch as a HomeKit device type 

@@ -90,6 +90,11 @@ Option | Default | Explanation
 `inputs` | `undefined` | The inputs that can be selected from within the TV interface when using the TV integration. Available inputs will be parsed automatically if these values are not supplied, however by supplying these in the config you can customise which inputs are presented and the ordering. See below for the format
 `exclude` | `undefined` | If you don't supply inputs manually (via `inputs` above) these will be parsed automatically from the device. The `exclude` option allows you to exclude specific inputs from being automatically setup - for example, on a speaker its unlikely you use all of the supported music services, and on a TV you may not use all of the available inputs. See below for the format.
 `speakergroups` | `undefined` | If you don't supply speaker groups these will be parsed automatically from the device. See below for the format.
+`addmute` | `false` | Add a mute switch to the device. Supported for fans, bulbs and switches
+`addpower` | `false` | Add a power switch to the device. Supported for speakers
+`addvolume` | `false` | Add a volume slider to the device. Supported for speakers and switches
+`addinputs` | `false` | Add a switch for each input present on the device. Supported for speakers, fans, bulbs and switches
+`addall` | `false` | Add additional supported buttons to the device.
 
 ## Adding your TVs and Smart Speakers to the Home app
 Note that devices using the TV and Smart Speaker integrations are exposed as external accessories and as such will not automatically be shown in the Home app or Control Centre remote - they need to be added as if they were a standalone HomeKit device.

@@ -174,6 +174,36 @@
             },
             "required": false
           },
+          "addmute": {
+            "title": "(Optional) Add Mute Button",
+            "description": "Adds a mute switch to fans, bulbs, and switches",
+            "type": "boolean",
+            "required": false
+          },
+          "addpower": {
+            "title": "(Optional) Add Power Button",
+            "description": "Adds a power switch to speakers",
+            "type": "boolean",
+            "required": false
+          },
+          "addvolume": {
+            "title": "(Optional) Add Volume",
+            "description": "Adds volume control to speakers and switches",
+            "type": "boolean",
+            "required": false
+          },
+          "addinputs": {
+            "title": "(Optional) Add Inputs",
+            "description": "Adds buttons for each input to fans, bulbs, and switches",
+            "type": "boolean",
+            "required": false
+          },
+          "addall": {
+            "title": "(Optional) Add all supported",
+            "description": "Adds all support extra controls for that device",
+            "type": "boolean",
+            "required": false
+          },
           "debug": {
             "title": "(Optional) Enable/disable debug level logging",
             "type": "boolean",
