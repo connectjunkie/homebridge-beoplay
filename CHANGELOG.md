@@ -2,7 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
-## 2.1.1 (2023-12-29)
+## 2.1.2 (2023-12-30)
+### Maintenance
+* Fix for missing index.jf
+
+## 2.1.1 (2023-12-30)
 ### Maintenance
 * Bumping versions for Homebridge and Node to current versions
 * Bumping dependencies
