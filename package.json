@@ -7,6 +7,9 @@
     "homebridge-plugin",
     "beoplay"
   ],
+  "files": [
+    "/lib"
+  ],
   "engines": {
     "node": "^16.20.2 || ^18.19.0 || ^20.10.0",
     "homebridge": "^1.7.0"
