@@ -8,8 +8,8 @@
     "beoplay"
   ],
   "engines": {
-    "node": "^14.21.1 || ^16.18.1 || ^18.12.1",
-    "homebridge": "^1.6.0"
+    "node": "^16.20.2 || ^18.19.0 || ^20.10.0",
+    "homebridge": "^1.7.0"
   },
   "author": {
     "name": "connectjunkie"
@@ -26,8 +26,8 @@
     "url": "https://github.com/connectjunkie/homebridge-beoplay/issues"
   },
   "dependencies": {
-    "@supercharge/strings": "1.29.1",
-    "got": "12.5.3",
+    "@supercharge/strings": "^2.0.0",
+    "got": "^12.6.1",
     "ndjson": "2.0.0",
     "tunnel": "0.0.6",
     "util": "0.12.5"

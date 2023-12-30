@@ -2,6 +2,11 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 2.1.1 (2023-12-29)
+### Maintenance
+* Bumping versions for Homebridge and Node to current versions
+* Bumping dependencies
+
 # 2.1 (2022-12-04)
 ### Changes
 * Added switch as a HomeKit device type 
