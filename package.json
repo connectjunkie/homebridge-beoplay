@@ -8,8 +8,8 @@
     "beoplay"
   ],
   "engines": {
-    "node": "^16.20.2 || ^18.19.0 || ^20.10.0",
-    "homebridge": "^1.7.0"
+    "node": "^20.15.1 || ^22",
+    "homebridge": "^1.7.0 || ^2.0.0-beta.0"
   },
   "author": {
     "name": "connectjunkie"
@@ -31,6 +31,17 @@
     "ndjson": "2.0.0",
     "tunnel": "0.0.6",
     "util": "0.12.5"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "nock": "^13.4.0",
+    "sinon": "^17.0.1",
+    "sinon-chai": "^3.7.0"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.test.js",
+    "test:watch": "mocha test/**/*.test.js --watch"
   },
   "type": "module"
 }

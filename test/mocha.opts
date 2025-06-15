@@ -1,0 +1,4 @@
+--recursive
+--timeout 5000
+--reporter spec
+--experimental-loader ./test/loader.js

@@ -2,6 +2,12 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 2.2 (2025-06-15)
+### Maintenance
+* Updates to supported versions of Node and Homebridge
+* Ready for Homebridge v2
+* Improved code comments and added a suite of test cases
+
 ## 2.1.2 (2023-12-30)
 ### Maintenance
 * Fix for missing index.jf
