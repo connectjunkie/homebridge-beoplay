@@ -40,7 +40,7 @@
     "sinon-chai": "^3.7.0"
   },
   "scripts": {
-    "test": "mocha test/**/*.test.js",
+    "test": "mocha test/**/*.test.js --exit",
     "test:watch": "mocha test/**/*.test.js --watch"
   },
   "type": "module"
