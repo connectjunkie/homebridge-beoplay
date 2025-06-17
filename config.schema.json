@@ -94,6 +94,12 @@
             "type": "integer",
             "required": false
           },
+          "maxvolumescaling": {
+            "title": "(Optional) Scale the volume (1-100%) to the set Max volume for the device",
+            "description": "Defaults to false",
+            "type": "boolean",
+            "required": false
+          },
           "inputs": {
             "title": "(Optional) Inputs to be configured",
             "type": "array",
