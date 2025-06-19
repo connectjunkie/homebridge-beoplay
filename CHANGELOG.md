@@ -2,6 +2,10 @@
 
 All notable changes from version 1.0.0 to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 2.3 (2025-06-19)
+### Changes
+* Added ability to have volume scaled to the device maximum volume
+
 ## 2.2 (2025-06-15)
 ### Maintenance
 * Updates to supported versions of Node and Homebridge
