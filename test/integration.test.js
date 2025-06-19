@@ -330,7 +330,7 @@ describe('Integration Tests - B&O API Communication', () => {
       device.updateVolume(25, 50)
 
       expect(mockLog.info).to.have.been.calledWith(
-        '[%s] Updating Volume to %d and limit to %d',
+        '[%s] Updating Volume to %d and max volume to %d',
         'Test Device',
         25,
         50
@@ -352,7 +352,7 @@ describe('Integration Tests - B&O API Communication', () => {
       device.updateVolume(30, 60)
 
       expect(mockLog.info).to.have.been.calledWith(
-        '[%s] Updating Volume to %d of the device max volume %d',
+        '[%s] Updating Volume to %d% of the device max volume %d',
         'Test Device',
         50, // 30/60 * 100 = 50
         60
@@ -373,7 +373,7 @@ describe('Integration Tests - B&O API Communication', () => {
       // Test with maximum volume (should show 100%)
       device.updateVolume(45, 45)
       expect(mockLog.info).to.have.been.calledWith(
-        '[%s] Updating Volume to %d of the device max volume %d',
+        '[%s] Updating Volume to %d% of the device max volume %d',
         'Test Device',
         100,
         45
@@ -383,7 +383,7 @@ describe('Integration Tests - B&O API Communication', () => {
       mockLog.info.resetHistory()
       device.updateVolume(0, 45)
       expect(mockLog.info).to.have.been.calledWith(
-        '[%s] Updating Volume to %d of the device max volume %d',
+        '[%s] Updating Volume to %d% of the device max volume %d',
         'Test Device',
         0,
         45
