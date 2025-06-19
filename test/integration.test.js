@@ -42,7 +42,13 @@ describe('Integration Tests - B&O API Communication', () => {
           this.UUID = uuid
           this.context = {}
         }
-        getService() { return null }
+        getService() { 
+          return { 
+            getCharacteristic: () => ({ updateValue: () => {} }),
+            setCharacteristic: () => this,
+            on: () => this 
+          } 
+        }
         addService() { return { setCharacteristic: () => this, getCharacteristic: () => this, on: () => this } }
       },
       registerPlatformAccessories: sinon.stub(),
@@ -146,7 +152,12 @@ describe('Integration Tests - B&O API Communication', () => {
       // Override the constructor's setupAccessoryServices call
       sinon.stub(device, 'setupAccessoryServices').resolves(true)
       // Set up the accessory context properly
-      device.beoplayAccessory = { context: {} }
+      device.beoplayAccessory = { 
+        context: {},
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
     })
 
     it('should set volume successfully', async () => {
@@ -175,7 +186,10 @@ describe('Integration Tests - B&O API Communication', () => {
 
     it('should respect maximum volume limits', async () => {
       device.beoplayAccessory = {
-        context: { maxVolume: 30 }
+        context: { maxVolume: 30 },
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
       }
 
       nock('http://192.168.1.100:8080')
@@ -188,6 +202,191 @@ describe('Integration Tests - B&O API Communication', () => {
         '[%s] Volume set to %s',
         'Test Device',
         30
+      )
+    })
+
+    it('should scale volume to device maximum when maxvolumescaling is enabled', async () => {
+      // Set up device with max volume scaling enabled
+      const scalingConfig = { ...mockConfig, maxvolumescaling: true }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, scalingConfig, mockApi)
+      sinon.stub(device, 'setupAccessoryServices').resolves(true)
+      
+      device.beoplayAccessory = {
+        context: { maxVolume: 60 },
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
+
+      nock('http://192.168.1.100:8080')
+        .put('/BeoZone/Zone/Sound/Volume/Speaker/Level')
+        .reply(200, {})
+
+      // Setting 50% should result in 30 (50% of 60)
+      await device.setVolume(50)
+
+      expect(mockLog.info).to.have.been.calledWith(
+        '[%s] Volume set to %s',
+        'Test Device',
+        30
+      )
+    })
+
+    it('should handle volume above maximum with scaling enabled', async () => {
+      const scalingConfig = { ...mockConfig, maxvolumescaling: true, debug: true }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, scalingConfig, mockApi)
+      sinon.stub(device, 'setupAccessoryServices').resolves(true)
+      
+      device.beoplayAccessory = {
+        context: { maxVolume: 40 },
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
+
+      nock('http://192.168.1.100:8080')
+        .put('/BeoZone/Zone/Sound/Volume/Speaker/Level')
+        .reply(200, {})
+
+      // Setting 80% would be 32 (80% of 40), but let's test 100% = 40
+      await device.setVolume(100)
+
+      expect(mockLog.debug).to.have.been.calledWith(
+        '[%s] Volume is scaled to the device maximum volume',
+        'Test Device'
+      )
+      expect(mockLog.info).to.have.been.calledWith(
+        '[%s] Volume set to %s',
+        'Test Device',
+        40
+      )
+    })
+
+    it('should sync HomeKit volume when requested volume exceeds maximum', async () => {
+      const debugConfig = { ...mockConfig, debug: true }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, debugConfig, mockApi)
+      sinon.stub(device, 'setupAccessoryServices').resolves(true)
+      
+      device.beoplayAccessory = {
+        context: { maxVolume: 30, currentVolume: 25 },
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
+
+      // Stub the updateVolume method to track calls
+      const updateVolumeSpy = sinon.spy(device, 'updateVolume')
+
+      nock('http://192.168.1.100:8080')
+        .put('/BeoZone/Zone/Sound/Volume/Speaker/Level')
+        .reply(200, {})
+
+      await device.setVolume(50) // Above max, should be clamped to 30
+
+      expect(mockLog.debug).to.have.been.calledWith(
+        '[%s] Volume of %d is higher than the device max, setting to the max of %d',
+        'Test Device',
+        50,
+        30
+      )
+      expect(mockLog.debug).to.have.been.calledWith(
+        '[%s] Adjusting HomeKit device volume to %d',
+        'Test Device',
+        30
+      )
+      expect(updateVolumeSpy).to.have.been.calledWith(30, 30)
+    })
+  })
+
+  describe('Volume Update and Scaling', () => {
+    beforeEach(async () => {
+      nock('http://192.168.1.100:8080')
+        .get('/BeoDevice')
+        .reply(200, {
+          beoDevice: {
+            productId: { productType: 'Test', serialNumber: '123' }
+          }
+        }, { 'device-jid': 'test@bang-olufsen.com' })
+
+      nock('http://192.168.1.100:8080')
+        .get('/BeoZone/Zone/Sources/')
+        .reply(200, { sources: [] })
+
+      nock('http://192.168.1.100:8080')
+        .get('/BeoZone/Zone/Sound/SpeakerGroup')
+        .reply(200, { speakerGroup: { list: [], active: 1 } })
+    })
+
+    it('should update volume with scaling disabled (default)', async () => {
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, mockConfig, mockApi)
+      sinon.stub(device, 'setupAccessoryServices').resolves(true)
+      device.beoplayAccessory = { 
+        context: {},
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
+
+      device.updateVolume(25, 50)
+
+      expect(mockLog.info).to.have.been.calledWith(
+        '[%s] Updating Volume to %d and limit to %d',
+        'Test Device',
+        25,
+        50
+      )
+    })
+
+    it('should update volume with scaling enabled', async () => {
+      const scalingConfig = { ...mockConfig, maxvolumescaling: true }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, scalingConfig, mockApi)
+      sinon.stub(device, 'setupAccessoryServices').resolves(true)
+      device.beoplayAccessory = { 
+        context: {},
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
+
+      // Device volume 30 out of max 60 should show as 50% in HomeKit
+      device.updateVolume(30, 60)
+
+      expect(mockLog.info).to.have.been.calledWith(
+        '[%s] Updating Volume to %d of the device max volume %d',
+        'Test Device',
+        50, // 30/60 * 100 = 50
+        60
+      )
+    })
+
+    it('should handle edge case volumes with scaling', async () => {
+      const scalingConfig = { ...mockConfig, maxvolumescaling: true }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, scalingConfig, mockApi)
+      sinon.stub(device, 'setupAccessoryServices').resolves(true)
+      device.beoplayAccessory = { 
+        context: {},
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
+
+      // Test with maximum volume (should show 100%)
+      device.updateVolume(45, 45)
+      expect(mockLog.info).to.have.been.calledWith(
+        '[%s] Updating Volume to %d of the device max volume %d',
+        'Test Device',
+        100,
+        45
+      )
+
+      // Test with zero volume (should show 0%)
+      mockLog.info.resetHistory()
+      device.updateVolume(0, 45)
+      expect(mockLog.info).to.have.been.calledWith(
+        '[%s] Updating Volume to %d of the device max volume %d',
+        'Test Device',
+        0,
+        45
       )
     })
   })
@@ -214,7 +413,12 @@ describe('Integration Tests - B&O API Communication', () => {
       // Override the constructor's setupAccessoryServices call
       sinon.stub(device, 'setupAccessoryServices').resolves(true)
       // Set up the accessory context properly
-      device.beoplayAccessory = { context: {} }
+      device.beoplayAccessory = { 
+        context: {},
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
     })
 
     it('should set mute state successfully', async () => {
@@ -264,7 +468,12 @@ describe('Integration Tests - B&O API Communication', () => {
       // Override the constructor's setupAccessoryServices call
       sinon.stub(device, 'setupAccessoryServices').resolves(true)
       // Set up the accessory context properly
-      device.beoplayAccessory = { context: {} }
+      device.beoplayAccessory = { 
+        context: {},
+        getService: () => ({ 
+          getCharacteristic: () => ({ updateValue: () => {} })
+        })
+      }
     })
 
     it('should get power state successfully', async () => {

@@ -371,24 +371,67 @@ describe('Configuration Validation Tests', () => {
     })
   })
 
+  describe('Max Volume Scaling Validation', () => {
+    it('should accept valid maxvolumescaling values', () => {
+      const validConfigs = [
+        { name: 'Test', ip: '192.168.1.100', maxvolumescaling: true },
+        { name: 'Test', ip: '192.168.1.100', maxvolumescaling: false },
+        { name: 'Test', ip: '192.168.1.100' } // undefined should be allowed
+      ]
+
+      validConfigs.forEach(config => {
+        mockLog.error.resetHistory()
+        
+        const device = new BeoplayPlatformDevice(mockPlatform, mockLog, config, mockApi)
+        
+        expect(mockLog.error).to.not.have.been.called
+        expect(device.maxvolumescaling).to.be.a('boolean')
+      })
+    })
+
+    it('should reject invalid maxvolumescaling values', () => {
+      const invalidConfigs = [
+        { name: 'Test', ip: '192.168.1.100', maxvolumescaling: 'true' },
+        { name: 'Test', ip: '192.168.1.100', maxvolumescaling: 1 },
+        { name: 'Test', ip: '192.168.1.100', maxvolumescaling: 'yes' },
+        { name: 'Test', ip: '192.168.1.100', maxvolumescaling: {} },
+        { name: 'Test', ip: '192.168.1.100', maxvolumescaling: [] }
+      ]
+
+      invalidConfigs.forEach(config => {
+        mockLog.error.resetHistory()
+        
+        new BeoplayPlatformDevice(mockPlatform, mockLog, config, mockApi)
+        
+        expect(mockLog.error).to.have.been.calledWith(
+          sinon.match(/Max volume scaling value.*is malformed or not valid/)
+        )
+      })
+    })
+  })
+
   describe('Configuration Defaults', () => {
     it('should apply correct defaults based on device type', () => {
       const testCases = [
         {
           config: { name: 'Speaker', ip: '192.168.1.100', type: 'speaker' },
-          expected: { type: 'speaker', mode: 'mute', on: 'on' }
+          expected: { type: 'speaker', mode: 'mute', on: 'on', maxvolumescaling: false }
         },
         {
           config: { name: 'TV', ip: '192.168.1.100', type: 'tv' },
-          expected: { type: 'tv', mode: 'power', on: 'input' }
+          expected: { type: 'tv', mode: 'power', on: 'input', maxvolumescaling: false }
         },
         {
           config: { name: 'SmartSpeaker', ip: '192.168.1.100', type: 'smartspeaker' },
-          expected: { type: 'smartspeaker', mode: 'mute', on: 'on' }
+          expected: { type: 'smartspeaker', mode: 'mute', on: 'on', maxvolumescaling: false }
         },
         {
           config: { name: 'Default', ip: '192.168.1.100' },
-          expected: { type: 'fan', mode: 'power', on: 'on' }
+          expected: { type: 'fan', mode: 'power', on: 'on', maxvolumescaling: false }
+        },
+        {
+          config: { name: 'WithMaxVol', ip: '192.168.1.100', maxvolumescaling: true },
+          expected: { type: 'fan', mode: 'power', on: 'on', maxvolumescaling: true }
         }
       ]
 
@@ -398,6 +441,7 @@ describe('Configuration Validation Tests', () => {
         expect(device.type).to.equal(expected.type)
         expect(device.mode).to.equal(expected.mode)
         expect(device.on).to.equal(expected.on)
+        expect(device.maxvolumescaling).to.equal(expected.maxvolumescaling)
       })
     })
 

@@ -134,6 +134,32 @@ describe('BeoplayPlatformDevice', () => {
         sinon.match(/Default input value.*is malformed or not valid/)
       )
     })
+
+    it('should validate maxvolumescaling configuration', () => {
+      // Test invalid values
+      const invalidValues = ['true', 1, 'yes', {}, [], null]
+      
+      invalidValues.forEach(maxvolumescaling => {
+        mockLog.error.resetHistory()
+        const invalidConfig = { ...mockConfig, maxvolumescaling }
+        device = new BeoplayPlatformDevice(mockPlatform, mockLog, invalidConfig, mockApi)
+
+        expect(mockLog.error).to.have.been.calledWith(
+          sinon.match(/Max volume scaling value.*is malformed or not valid/)
+        )
+      })
+
+      // Test valid values
+      const validValues = [true, false, undefined]
+      
+      validValues.forEach(maxvolumescaling => {
+        mockLog.error.resetHistory()
+        const validConfig = { ...mockConfig, maxvolumescaling }
+        device = new BeoplayPlatformDevice(mockPlatform, mockLog, validConfig, mockApi)
+
+        expect(mockLog.error).to.not.have.been.called
+      })
+    })
   })
 
   describe('input validation', () => {
@@ -340,6 +366,25 @@ describe('BeoplayPlatformDevice', () => {
       device = new BeoplayPlatformDevice(mockPlatform, mockLog, configWithoutType, mockApi)
 
       expect(device.type).to.equal('fan')
+    })
+
+    it('should set maxvolumescaling property correctly', () => {
+      sinon.stub(BeoplayPlatformDevice.prototype, 'setupAccessoryServices').returns(false)
+      
+      // Test default value (false)
+      const defaultConfig = { ...mockConfig }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, defaultConfig, mockApi)
+      expect(device.maxvolumescaling).to.equal(false)
+
+      // Test explicit true value
+      const enabledConfig = { ...mockConfig, maxvolumescaling: true }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, enabledConfig, mockApi)
+      expect(device.maxvolumescaling).to.equal(true)
+
+      // Test explicit false value
+      const disabledConfig = { ...mockConfig, maxvolumescaling: false }
+      device = new BeoplayPlatformDevice(mockPlatform, mockLog, disabledConfig, mockApi)
+      expect(device.maxvolumescaling).to.equal(false)
     })
   })
 })
