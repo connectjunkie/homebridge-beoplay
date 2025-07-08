@@ -28,28 +28,42 @@
             "title": "(Optional) What device to display the B&O device as in HomeKit",
             "description": "Defaults to fan (for speakers) or tv (for TVs)",
             "type": "string",
-            "oneOf": [{
+            "oneOf": [
+              {
                 "title": "Speaker",
-                "enum": ["speaker"]
+                "enum": [
+                  "speaker"
+                ]
               },
               {
                 "title": "Smart Speaker",
-                "enum": ["smartspeaker"]},
+                "enum": [
+                  "smartspeaker"
+                ]
+              },
               {
                 "title": "Bulb",
-                "enum": ["bulb"]
+                "enum": [
+                  "bulb"
+                ]
               },
               {
                 "title": "Fan",
-                "enum": ["fan"]
+                "enum": [
+                  "fan"
+                ]
               },
               {
                 "title": "Switch",
-                "enum": ["switch"]
+                "enum": [
+                  "switch"
+                ]
               },
               {
                 "title": "TV",
-                "enum": ["tv"]
+                "enum": [
+                  "tv"
+                ]
               }
             ],
             "required": false
@@ -58,13 +72,18 @@
             "title": "(Optional) Whether to mute/unmute or to power on/standby a Speaker, Bulb or Fan when selected",
             "description": "Defaults to Mute for speakers and smart speakers. Defaults to power on/standby for TVs, bulbs and fans",
             "type": "string",
-            "oneOf": [{
+            "oneOf": [
+              {
                 "title": "Mute Device",
-                "enum": ["mute"]
+                "enum": [
+                  "mute"
+                ]
               },
               {
                 "title": "Power On/Standby",
-                "enum": ["power"]
+                "enum": [
+                  "power"
+                ]
               }
             ],
             "required": false
@@ -73,17 +92,24 @@
             "title": "(Optional) Power on via setting an input, via the API, or by joining a multiroom experience",
             "description": "Defaults to API for speakers, smart speakers, bulbs, and fans. Defaults to via an input for TVs",
             "type": "string",
-            "oneOf": [{
+            "oneOf": [
+              {
                 "title": "Power on via the API",
-                "enum": ["on"]
+                "enum": [
+                  "on"
+                ]
               },
               {
                 "title": "Power on via setting an input (default for TVs)",
-                "enum": ["input"]
+                "enum": [
+                  "input"
+                ]
               },
               {
                 "title": "Power on via joining a multiroom experience",
-                "enum": ["join"]
+                "enum": [
+                  "join"
+                ]
               }
             ],
             "required": false
@@ -97,6 +123,12 @@
           "maxvolumescaling": {
             "title": "(Optional) Scale the volume (1-100%) to the set Max volume for the device",
             "description": "Defaults to false",
+            "type": "boolean",
+            "required": false
+          },
+          "extrabuttons": {
+            "title": "(Optional) Enable extra buttons functionality",
+            "description": "Enable additional button controls for the device",
             "type": "boolean",
             "required": false
           },
@@ -115,25 +147,36 @@
                 "type": {
                   "title": "Input type",
                   "type": "string",
-                  "oneOf": [{
+                  "oneOf": [
+                    {
                       "title": "TV Tuner",
-                      "enum": ["TUNER"]
+                      "enum": [
+                        "TUNER"
+                      ]
                     },
                     {
                       "title": "HDMI",
-                      "enum": ["HDMI"]
+                      "enum": [
+                        "HDMI"
+                      ]
                     },
                     {
                       "title": "Application",
-                      "enum": ["APPLICATION"]
+                      "enum": [
+                        "APPLICATION"
+                      ]
                     },
                     {
                       "title": "AirPlay",
-                      "enum": ["AIRPLAY"]
+                      "enum": [
+                        "AIRPLAY"
+                      ]
                     },
                     {
                       "title": "Other",
-                      "enum": ["OTHER"]
+                      "enum": [
+                        "OTHER"
+                      ]
                     }
                   ],
                   "required": true
@@ -165,10 +208,10 @@
               "type": "object",
               "properties": {
                 "id": {
-                "title": "id value for the speaker group",
-                "type": "integer",
-                "description": "id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/Sound/SpeakerGroup/",
-                "required": true
+                  "title": "id value for the speaker group",
+                  "type": "integer",
+                  "description": "id values can be looked up from your device using a browser at the URL path http://x.x.x.x:8080/BeoZone/Zone/Sound/SpeakerGroup/",
+                  "required": true
                 },
                 "name": {
                   "title": "Name of the speaker group",
